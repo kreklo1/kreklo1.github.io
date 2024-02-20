@@ -1,0 +1,59 @@
+---
+title: "Mary Kreklow"
+about:
+  id: intro-heading
+  template: trestles
+  image: images/profile_pic.jpg
+  image-shape: round
+  links:
+    - icon: envelope
+      href: mailto:kreklo1@stolaf.edu
+    - icon: github
+      href: https://github.com/kreklo1
+---
+:::{#intro-heading}
+
+## Mary Kreklow
+
+Quantitative Economics Student <br>
+[St. Olaf College](https://wp.stolaf.edu/)
+
+### Education
+
+Bachelor of Arts (B.A.) in Quantitative Economics Concentrations in Statistics & Data Science, International Relations Expected Graduation 2026 | St. Olaf College
+
+High School Diploma 2022 | Tigerton High School
+
+### Work Experience
+
+SOAR Peer Leader | Academic Success Center | April 2023-present
+
+Lead Fellow | St. Olaf Admissions | October 2022-present
+
+Cabin Leader | Crossways Camping Ministry | May 2022-present
+
+Hall Receptionist | St. Olaf Residence Life | September 2022-May 2023
+
+Crew Member | Killian Management McDonald’s | June 2020-August 2022
+
+### Co-Curricular Experience
+
+Chapel Choir: Alto 1
+
+Community Council - Thorson Hall
+
+TRIO - Peer Mentor
+
+Student Congregation Council: Secretary
+
+St. Olaf Leftists
+
+:::
+
+### Get in Touch
+
+**Email**: <a href='mailto:kreklo1@stolaf.edu'></a>
+
+**Address**: 333 Sunrise Rd, Tigerton WI, 54486
+
+**Phone**: 715-250-3816
