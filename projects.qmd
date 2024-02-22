@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "Projects"
 listing:
@@ -12,3 +13,19 @@ title-block-banner: true
 comments: false
 ---
 
+=======
+---
+title: "Projects"
+listing:
+  contents: projects
+  sort: "title desc"
+  type: grid
+  categories: true
+  sort-ui: true
+  filter-ui: true
+page-layout: full
+title-block-banner: true
+comments: false
+---
+
+>>>>>>> 83188d265b15b2d40b19772b236e6e23cff15339

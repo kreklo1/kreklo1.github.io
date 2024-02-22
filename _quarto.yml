@@ -21,9 +21,10 @@ page-footer:
 
 format:
   html:
-    theme: cosmo
+    theme: journal
     css: styles.css
     toc: true
 
 editor: visual
+
 
