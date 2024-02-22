@@ -10,8 +10,7 @@ website:
         text: Home
       - projects.qmd
       - hw.qmd
-      
-page-footer:
+  page-footer:
     left: |
       &copy; Mary Kreklow, 2024<br>
       All content licensed under <i class='bi-badge-cc'></i>
