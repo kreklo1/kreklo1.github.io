@@ -32,6 +32,7 @@ format:
     theme: journal
     css: styles.css
     toc: true
+    code-overflow: wrap
 
 editor: visual
 
