@@ -1,1 +1,13 @@
 /* css styles */
+
+.container-lg {
+    display: flex;
+}
+
+.flex-auto {
+    width: 100%;
+}
+
+.flex-shrink-0 {
+    display: none;
+}
