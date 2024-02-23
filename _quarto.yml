@@ -6,10 +6,10 @@ website:
   title: "Mary Kreklow"
   navbar:
     left:
-      - href: index.qmd
+      - file: index.qmd
         text: Home
-      - projects.qmd
-      - hw.qmd
+      - file: projects.qmd
+      - file: hw.qmd
       - sidebar:maps
 
   sidebar:
