@@ -1,4 +1,37 @@
 ---
 title: "US States"
 sidebar: false
+editor_options: 
+  chunk_output_type: console
 ---
+
+```{r}
+library(readr)
+library(tidyverse)
+rat_pop <- read_csv("~/RStudio/rat-population-by-state-2024.csv")
+state_pop <-read_csv("~/RStudio/state-population-table.csv")
+```
+
+```{r}
+library(maps)
+us_states <- map_data("state")
+
+state_population<-state_pop|>
+  mutate(state=str_to_lower(state))|>
+  select(state, pop2024)
+```
+
+```{r}
+rat_pop |>
+  mutate(state=str_to_lower(state))|>
+  right_join(us_states, by = c("state" = "region"))|>left_join(state_population)|>
+  mutate(prop_rat=`RatPopulation(millions)`/(pop2024/1000000))|>
+  ggplot(mapping = aes(x=long, y=lat, group=group))+
+  geom_polygon(aes(fill=prop_rat), color="black")+
+  coord_map()+
+  theme_void()+
+  scale_fill_gradient2()+
+  labs(fill="Rats/Person", title="Proportion of Rats per People")
+
+```
+
