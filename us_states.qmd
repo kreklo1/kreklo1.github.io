@@ -5,14 +5,14 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r}
+```{r, include=FALSE}
 library(readr)
 library(tidyverse)
 rat_pop <- read_csv("~/RStudio/rat-population-by-state-2024.csv")
 state_pop <-read_csv("~/RStudio/state-population-table.csv")
 ```
 
-```{r}
+```{r, include=FALSE}
 library(maps)
 us_states <- map_data("state")
 
@@ -21,7 +21,7 @@ state_population<-state_pop|>
   select(state, pop2024)
 ```
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 rat_pop |>
   mutate(state=str_to_lower(state))|>
   right_join(us_states, by = c("state" = "region"))|>left_join(state_population)|>
