@@ -1,5 +1,6 @@
 ---
 title: "Projects"
+sidebar: false
 listing:
   contents: projects
   sort: "title desc"
@@ -11,4 +12,5 @@ page-layout: full
 title-block-banner: true
 comments: false
 ---
+
 This is where I'll put projects from Data Science 2!
