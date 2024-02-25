@@ -32,6 +32,6 @@
     "href": "us_states.html",
     "title": "US States",
     "section": "",
-    "text": "Joining with `by = join_by(state)`"
+    "text": "Rat Graph\nThis graph shows the proportion of rats per person for each state. One might use this if they have either a strong like or dislike for rats and are willing to relocate accordingly. Someone who really loves rats and would like to cohabitate with them may wish to check out New York, as we see that there is about a rat for each person residing there. On the other hand, someone who is looking to stay as far away as possible might have better luck with somewhere like Colorado, where they will find closer to 1 rat for every 10 people."
   }
 ]
