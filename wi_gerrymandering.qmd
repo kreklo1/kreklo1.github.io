@@ -121,7 +121,7 @@ leaflet_wi
 
 ### 2016 WI Congressional Districts
 
-This map shows the congressional Districts in WI as of 2016. The colors from blue to red represent how respectively Democratic or Republican that district voted in the 2016 elections for Congree.
+This map shows the congressional Districts in WI as of 2016. The colors from blue to red represent how respectively Democratic or Republican that district voted in the 2016 elections for Congress.
 
 One interesting aspect is the shapes of the districts. We see that some districts, like Districts 3 & 4 are very oddly shaped. District 3 seems to reach up into areas like Stevens Point and Eau Claire, while District 4 is by far the smallest, and covers little more than Milwaukee. This could bring up accusations of gerrymandering, especially seeing as the two weirdest shaped districts are also 2 of the 3 that elected Democratic Representatives. If, for example, District 4 was a bit bigger, it might draw some of the republican votes away from their respective districts and make those districts more competitive and at risk of turning blue. The size of District 7 is also notable. It is likely that there are some more liberal areas in NW Wisconsin around Superior, however their votes would be cancelled out by the large span of conservative areas in northcentral WI.
 
