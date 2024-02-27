@@ -31,7 +31,7 @@ rat_pop |>
   coord_map()+
   theme_void()+
   scale_fill_gradient2()+
-  labs(fill="Rats/Person", title="Proportion of Rats per People")
+  labs(fill="Rats/Person", title="Proportion of Rats per Person in Each State")
 
 ```
 
