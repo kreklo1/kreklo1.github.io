@@ -10,6 +10,7 @@ website:
         text: Home
       - file: projects.qmd
       - file: hw.qmd
+      - file: rtip.qmd
       - sidebar:maps
 
   sidebar:
