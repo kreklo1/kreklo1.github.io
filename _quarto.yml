@@ -15,7 +15,7 @@ website:
 
   sidebar:
     - id: maps
-      title: "Maps"
+      title: "Maps Project"
       contents:
         - us_states.qmd
         - wi_gerrymandering.qmd
