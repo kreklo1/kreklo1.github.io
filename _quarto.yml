@@ -8,10 +8,9 @@ website:
     left:
       - file: index.qmd
         text: Home
-      - file: projects.qmd
-      - file: hw.qmd
       - file: rtip.qmd
       - sidebar:maps
+      - file: mini_project2.qmd
 
   sidebar:
     - id: maps

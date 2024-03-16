@@ -7,7 +7,7 @@ editor_options:
 
 ### Circlize Package
 
-The circlize package is very helpful in displaying data circularly. This can allow up to stack different types of charts about the same data, as shown below, and it also has many benefits pertaining to looking at connections between variables.
+The circlize package is very helpful in displaying data circularly. This can allow us to stack different types of charts about the same data, as shown below, and it also has many benefits pertaining to looking at connections between variables.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(circlize)
@@ -62,7 +62,7 @@ circos.link("e", 0, "g", c(-1,1), col = "lightpink2", border = "black", lwd = 2,
 circos.clear()
 ```
 
-This next chart is just an example of how one might facet these charts to display data a little differently. You can, of course, have multiple circles that all display data and charts, however for this example I choose to just play with their colors and brightness.
+This next chart is just an example of how you can facet these charts. You can, of course, have multiple circles that all display data and charts, however for this example I choose to just play with their colors and brightness.
 
 ```{r, echo=FALSE}
 par(mar = c(1, 1, 1, 1))
@@ -85,10 +85,9 @@ points(1:10, rep(8, 10), pch = 16, cex = 5,
     col = rand_color(10, hue = "monochrome", luminosity = "bright"))
 ```
 
-While the first two graphs were just playing around with the package with random variables, this last graph is a real world example of how the circlize package might be used. The World Phones dataset shows the amount of phones in different regions of the world throughout a few years. I am using it with the chordDiagram function to show the relationship between the regions and years where there were phones.
+While the first two graphs were just playing around with the package with random variables, this last graph is a real world example of how the circlize package might be used. The World Phones dataset shows the amount of phones in different regions of the world throughout a few years. I am using it with the chordDiagram function to show where there were phones in the regions throughout the years.
 
-```` r
-```{r}
+``` r
 # Load circlize package
 library(circlize)
 
@@ -98,7 +97,6 @@ data("WorldPhones")
 # Create a circular plot
 chordDiagram(WorldPhones, transparency = 0.5)
 ```
-````
 
 ```{r, echo=FALSE}
 # Load circlize package
@@ -112,4 +110,4 @@ chordDiagram(WorldPhones, transparency = 0.5)
 
 ```
 
-For more information, this [link](https://docs.google.com/presentation/d/17nzNtH0aQIC3E4HMi8CHmco88JRg5UrtQaihstgQ_sE/edit?usp=sharing) will take you to a presentation overview of the circlize dataset and some of its uses.
+For more information, this [link](https://docs.google.com/presentation/d/17nzNtH0aQIC3E4HMi8CHmco88JRg5UrtQaihstgQ_sE/edit?usp=sharing) will take you to a presentation with an overview of the circlize dataset and some of its uses.

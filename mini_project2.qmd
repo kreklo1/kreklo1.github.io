@@ -1,0 +1,14 @@
+---
+title: "Mini Project 2"
+sidebar: false
+editor_options: 
+  chunk_output_type: console
+---
+```{r}
+library(Stat2Data)
+```
+
+```{r}
+data(FatRats)
+FatRats
+```
