@@ -6,9 +6,60 @@ editor_options:
 ---
 ```{r}
 library(Stat2Data)
+library(tidyverse)
 ```
 
 ```{r}
 data(FatRats)
-FatRats
+FatRats|>
+  mutate(shuffled_source=sample(Source))
+
+
+
+#Is there significance between foods fed to the rats(beef, cereal, and pork)?
+rat_summary<-FatRats|>
+  group_by(Source)|>
+  summarize(prop_gain_lot=mean(Gain>="80"))
+observed_diff<-rat_summary[[2]][2]-rat_summary[[2]][1]
+
+
+simulated_diffs<-vector("double", 1000)
+for(i in 1:1000){
+new_rat<-FatRats|>
+  mutate(shuffled_source=sample(Source))|>
+  group_by(shuffled_source)|>
+  summarize(prop_gain_lot=mean(Gain>="80"))
+simulated_diffs[[i]]<-new_rat[[2]][2]-new_rat[[2]][1]}
+
+null_world<-tibble(simulated_diffs=simulated_diffs)
+ggplot(null_world, aes(x=simulated_diffs))+
+  geom_histogram()+
+  geom_vline(xintercept=observed_diff, color="red")
+
+p_value<-sum(simulated_diffs>=observed_diff)/1000
+p_value
+```
+
+```{r}
+rat_summary<-FatRats|>
+  group_by(Protein)|>
+  summarize(prop_gain_lot=mean(Gain>="80"))
+observed_diff<-rat_summary[[2]][2]-rat_summary[[2]][1]
+
+
+simulated_diffs<-vector("double", 1000)
+for(i in 1:1000){
+new_rat<-FatRats|>
+  mutate(shuffled_protein=sample(Protein))|>
+  group_by(shuffled_protein)|>
+  summarize(prop_gain_lot=mean(Gain>="80"))
+simulated_diffs[[i]]<-new_rat[[2]][2]-new_rat[[2]][1]}
+
+null_world<-tibble(simulated_diffs=simulated_diffs)
+ggplot(null_world, aes(x=simulated_diffs))+
+  geom_histogram()+
+  geom_vline(xintercept=observed_diff, color="red")
+
+p_value<-sum(simulated_diffs>=observed_diff)/1000
+p_value
 ```
