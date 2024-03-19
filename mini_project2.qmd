@@ -86,7 +86,7 @@ null_world_beef_cereal <- tibble(simulated_diffs = permuted_stats[, 2])
 ggplot(null_world_beef_cereal, aes(x = simulated_diffs)) +
   geom_histogram(color="pink2", fill="lightpink") +
   geom_vline(xintercept = rat_stats[2], color = "hotpink", linewidth=1) +
-  labs(x = "Difference in means (Beef vs. Cereal)")
+  labs(x = "Mean Weight Gain (Beef vs. Cereal)")
 cat("Beef vs. Cereal p-value:", p_values[2], "\n")
 
 
@@ -95,7 +95,7 @@ null_world_pork_cereal <- tibble(simulated_diffs = permuted_stats[, 3])
 ggplot(null_world_pork_cereal, aes(x = simulated_diffs)) +
   geom_histogram(color="pink2", fill="lightpink") +
   geom_vline(xintercept = rat_stats[3], color = "hotpink", linewidth=1) +
-  labs(x = "Difference in means (Pork vs. Cereal)")
+  labs(x = "Mean Weight Gain (Pork vs. Cereal)")
 cat("Pork vs. Cereal p-value:", p_values[3], "\n")
 
 ```
