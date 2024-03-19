@@ -11,7 +11,7 @@ library(tidyverse)
 
 ### Fat Rats!
 
-For this project, I examined the dataset FatRats, which has data from an experiment on the effects of diet on the weight gain of rats. The study had 60 baby rat participants. They split them up into groups, where they were fed different sources of protein(Beef, Cereal, and Pork). The results show the weight gain for each rat from their protein source.
+For this project, I examined the dataset FatRats, which has data from an experiment on the effects of diet on the weight gain of rats. The study had 60 baby rat participants, which were split up into groups and fed different sources of protein(Beef, Cereal, and Pork). The resulting dataset shows the weight gain for each rat from their protein source.
 
 I decided to conduct a randomization-type test by simulating the behavior under the null hypothesis. I wanted to see if the results of the study would be significant. I did this by running simulations of the study and randomizing the protein source to see if a random test would produce significantly different responses than the experiment did.
 
