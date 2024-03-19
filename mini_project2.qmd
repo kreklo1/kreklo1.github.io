@@ -15,7 +15,7 @@ For this project, I examined the dataset FatRats, which has data from an experim
 
 I decided to conduct a randomization-type test by simulating the behavior under the null hypothesis. I wanted to see if the results of the study would be significant. I did this by running simulations of the study and randomizing the protein source to see if a random test would produce significantly different responses than the experiment did.
 
-The following graphs show the difference in average weight gains between different proteins with the randomized test. The hot pink vertical line shows the average weight gain from the study that was run. The p-values below each chart show the probability under the null hypothesis(our randomized experiment) of obtaining a test statistic at least as extreme as the one obtained. The p-values are calculated by looking at how many of the randomized statistics are greater than or equal to the observed statistics from the rat study.
+The following graphs show the difference in average weight gains between different proteins with the randomized test, which shows what might happen if protein had no effect. The hot pink vertical line shows the average weight gain from the study that was run. The p-values below each chart show the probability under the null hypothesis(our randomized experiment) of obtaining a test statistic at least as extreme as the one obtained. The p-values are calculated by looking at how many of the randomized statistics are greater than or equal to the observed statistics from the rat study.
 
 ```{r, include=FALSE}
 data(FatRats)
@@ -59,11 +59,9 @@ simulated_stats <- function(data, variable, n_permutations) {
                                   mean(permuted_data$Gain[permuted_data$Source == "Cereal"])
     
     simulated_diffs[i, 3] <- mean(permuted_data$Gain[permuted_data$Source == "Pork"]) -
-                                  mean(permuted_data$Gain[permuted_data$Source == "Cereal"])
-  }
+                                  mean(permuted_data$Gain[permuted_data$Source == "Cereal"])}
   
-  return(simulated_diffs)
-}
+  return(simulated_diffs)}
 
 permuted_stats <- simulated_stats(FatRats, "Gain", 1000)
 
