@@ -4,12 +4,20 @@ sidebar: false
 editor_options: 
   chunk_output_type: console
 ---
-```{r}
+```{r, include=FALSE}
 library(Stat2Data)
 library(tidyverse)
 ```
 
-```{r}
+### Fat Rats!
+
+For this project, I examined the dataset FatRats, which has data from an experiment on the effects of diet on the weight gain of rats. The study had 60 baby rat participants. They split them up into groups, where they were fed different sources of protein(Beef, Cereal, and Pork). The results show the weight gain for each rat from their protein source.
+
+I decided to conduct a randomization-type test by simulating the behavior under the null hypothesis. I wanted to see if the results of the study would be significant. I did this by running simulations of the study and randomizing the protein source to see if a random test would produce significantly different responses than the experiment did.
+
+The following graphs show the difference in average wait gains between different proteins with the randomized test. The hot pink vertical line shows the average wait gain from the study that was run. The p-values below each chart show the probability under the null hypothesis(our randomized experiment) of obtaining a test statistic at least as extreme as the one obtained. The p-values are calculated by looking at how many of the randomized statistics are greater than or equal to the observed statistics from the rat study.
+
+```{r, include=FALSE}
 data(FatRats)
 FatRats|>
   mutate(shuffled_source=sample(Source))
@@ -20,46 +28,76 @@ FatRats|>
 rat_summary<-FatRats|>
   group_by(Source)|>
   summarize(prop_gain_lot=mean(Gain>="80"))
-observed_diff<-rat_summary[[2]][2]-rat_summary[[2]][1]
-
-
-simulated_diffs<-vector("double", 1000)
-for(i in 1:1000){
-new_rat<-FatRats|>
-  mutate(shuffled_source=sample(Source))|>
-  group_by(shuffled_source)|>
-  summarize(prop_gain_lot=mean(Gain>="80"))
-simulated_diffs[[i]]<-new_rat[[2]][2]-new_rat[[2]][1]}
-
-null_world<-tibble(simulated_diffs=simulated_diffs)
-ggplot(null_world, aes(x=simulated_diffs))+
-  geom_histogram()+
-  geom_vline(xintercept=observed_diff, color="red")
-
-p_value<-sum(simulated_diffs>=observed_diff)/1000
-p_value
+observed_diff_beef_cereal<-rat_summary[[2]][2]-rat_summary[[2]][1]
+observed_diff_beef_pork<-rat_summary[[2]][3]-rat_summary[[2]][1]
+observed_diff_pork_cereal<-rat_summary[[2]][2]-rat_summary[[2]][3]
 ```
 
-```{r}
-rat_summary<-FatRats|>
-  group_by(Protein)|>
-  summarize(prop_gain_lot=mean(Gain>="80"))
-observed_diff<-rat_summary[[2]][2]-rat_summary[[2]][1]
+```{r, echo=FALSE, message=FALSE}
+rat_stat <- function(data, variable, group1, group2) {
+  mean_1 <- mean(data$Gain[data$Source == group1])
+  mean_2 <- mean(data$Gain[data$Source == group2])
+  return(mean_1 - mean_2)
+}
+
+rat_stats <- c(rat_stat(FatRats, Source, "Beef", "Pork"),
+               rat_stat(FatRats, Source, "Beef", "Cereal"),
+               rat_stat(FatRats, Source, "Pork", "Cereal"))
 
 
-simulated_diffs<-vector("double", 1000)
-for(i in 1:1000){
-new_rat<-FatRats|>
-  mutate(shuffled_protein=sample(Protein))|>
-  group_by(shuffled_protein)|>
-  summarize(prop_gain_lot=mean(Gain>="80"))
-simulated_diffs[[i]]<-new_rat[[2]][2]-new_rat[[2]][1]}
+simulated_stats <- function(data, variable, n_permutations) {
+  simulated_diffs <- matrix(NA, nrow = 1000, ncol = 3)
 
-null_world<-tibble(simulated_diffs=simulated_diffs)
-ggplot(null_world, aes(x=simulated_diffs))+
-  geom_histogram()+
-  geom_vline(xintercept=observed_diff, color="red")
+  for (i in 1:1000) {
+    permuted_data <- data |>
+      mutate(Gain = sample(Gain))
+    
+    simulated_diffs[i, 1] <- mean(permuted_data$Gain[permuted_data$Source == "Beef"]) -
+                                  mean(permuted_data$Gain[permuted_data$Source == "Pork"])
+    
+    simulated_diffs[i, 2] <- mean(permuted_data$Gain[permuted_data$Source == "Beef"]) -
+                                  mean(permuted_data$Gain[permuted_data$Source == "Cereal"])
+    
+    simulated_diffs[i, 3] <- mean(permuted_data$Gain[permuted_data$Source == "Pork"]) -
+                                  mean(permuted_data$Gain[permuted_data$Source == "Cereal"])
+  }
+  
+  return(simulated_diffs)
+}
 
-p_value<-sum(simulated_diffs>=observed_diff)/1000
-p_value
+permuted_stats <- simulated_stats(FatRats, "Gain", 1000)
+
+
+p_values <- colMeans(permuted_stats >= rat_stats)
+
+
+
+null_world_beef_pork <- tibble(simulated_diffs = permuted_stats[, 1])
+
+ggplot(null_world_beef_pork, aes(x = simulated_diffs)) +
+  geom_histogram(color="pink2", fill="lightpink") +
+  geom_vline(xintercept = rat_stats[1], color = "hotpink", linewidth=1) +
+  labs(x = "Mean Weight Gain (Beef vs. Pork)")
+cat("Beef vs. Pork p-value:", p_values[1], "\n")
+
+
+null_world_beef_cereal <- tibble(simulated_diffs = permuted_stats[, 2])
+
+ggplot(null_world_beef_cereal, aes(x = simulated_diffs)) +
+  geom_histogram(color="pink2", fill="lightpink") +
+  geom_vline(xintercept = rat_stats[2], color = "hotpink", linewidth=1) +
+  labs(x = "Difference in means (Beef vs. Cereal)")
+cat("Beef vs. Cereal p-value:", p_values[2], "\n")
+
+
+null_world_pork_cereal <- tibble(simulated_diffs = permuted_stats[, 3])
+
+ggplot(null_world_pork_cereal, aes(x = simulated_diffs)) +
+  geom_histogram(color="pink2", fill="lightpink") +
+  geom_vline(xintercept = rat_stats[3], color = "hotpink", linewidth=1) +
+  labs(x = "Difference in means (Pork vs. Cereal)")
+cat("Pork vs. Cereal p-value:", p_values[3], "\n")
+
 ```
+
+As we can see, all of the p-values are close to 0.3. Generally, if the p-value is less than 0.05, we will consider the results of the study statistically significant. Because these results are well over the point of statistical significance, we can fail to reject the null hypothesis and claim that the difference in weight gains due to different protiens is not statistically significant.
