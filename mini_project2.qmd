@@ -18,13 +18,8 @@ I decided to conduct a randomization-type test by simulating the behavior under 
 The following graphs show the difference in average weight gains between different proteins with the randomized test, which shows what might happen if protein had no effect. The hot pink vertical line shows the average weight gain from the study that was run. The p-values below each chart show the probability under the null hypothesis(our randomized experiment) of obtaining a test statistic at least as extreme as the one obtained. The p-values are calculated by looking at how many of the randomized statistics are greater than or equal to the observed statistics from the rat study.
 
 ```{r, include=FALSE}
-data(FatRats)
-FatRats|>
-  mutate(shuffled_source=sample(Source))
+data("FatRats")
 
-
-
-#Is there significance between foods fed to the rats(beef, cereal, and pork)?
 rat_summary<-FatRats|>
   group_by(Source)|>
   summarize(prop_gain_lot=mean(Gain>="80"))
@@ -37,8 +32,7 @@ observed_diff_pork_cereal<-rat_summary[[2]][2]-rat_summary[[2]][3]
 rat_stat <- function(data, variable, group1, group2) {
   mean_1 <- mean(data$Gain[data$Source == group1])
   mean_2 <- mean(data$Gain[data$Source == group2])
-  return(mean_1 - mean_2)
-}
+  return(mean_1 - mean_2)}
 
 rat_stats <- c(rat_stat(FatRats, Source, "Beef", "Pork"),
                rat_stat(FatRats, Source, "Beef", "Cereal"),
@@ -54,6 +48,7 @@ simulated_stats <- function(data, variable, n_permutations) {
     simulated_diffs[i, 2] <- mean(permuted_data$Gain[permuted_data$Source == "Beef"]) -                            mean(permuted_data$Gain[permuted_data$Source == "Cereal"])
     simulated_diffs[i, 3] <- mean(permuted_data$Gain[permuted_data$Source == "Pork"]) -                             mean(permuted_data$Gain[permuted_data$Source == "Cereal"])}
   return(simulated_diffs)}
+
 
 permuted_stats <- simulated_stats(FatRats, "Gain", 1000)
 
@@ -86,4 +81,4 @@ ggplot(null_world_pork_cereal, aes(x = simulated_diffs)) +
 cat("Pork vs. Cereal p-value:", p_values[3], "\n")
 ```
 
-As we can see, all of the p-values are close to 0.3. Generally, if the p-value is less than 0.05, we will consider the results of the study statistically significant. Because these results are well over the point of statistical significance, we can fail to reject the null hypothesis and claim that the difference in weight gains due to different protiens is not statistically significant.
+As we can see, all of the p-values are close to 0.3. Generally, if the p-value is less than 0.05, we will consider the results of the study statistically significant. Because these results are well over the point of statistical significance, we can fail to reject the null hypothesis and claim that the difference in weight gains due to different proteins is not statistically significant.
