@@ -10,7 +10,7 @@ library(Stat2Data)
 library(tidyverse)
 ```
 
-### Fat Rats!   
+### Fat Rats!
 
 ![](images/FP_5427726_BARM_Rats_071810.webp)
 
@@ -41,7 +41,6 @@ rat_stats <- c(rat_stat(FatRats, Source, "Beef", "Pork"),
                rat_stat(FatRats, Source, "Beef", "Cereal"),
                rat_stat(FatRats, Source, "Pork", "Cereal"))
 
-
 simulated_stats <- function(data, variable, n_permutations) {
   simulated_diffs <- matrix(NA, nrow = 1000, ncol = 3)
   for (i in 1:1000) {
@@ -52,12 +51,10 @@ simulated_stats <- function(data, variable, n_permutations) {
     simulated_diffs[i, 3] <- mean(permuted_data$Gain[permuted_data$Source == "Pork"]) -                             mean(permuted_data$Gain[permuted_data$Source == "Cereal"])}
   return(simulated_diffs)}
 
-
 permuted_stats <- simulated_stats(FatRats, "Gain", 1000)
 
 p_values <- colMeans(permuted_stats >= rat_stats)
 ```
-
 
 ```{r, echo=FALSE, message=FALSE}
 null_world_beef_pork <- tibble(simulated_diffs = permuted_stats[, 1])
@@ -69,7 +66,6 @@ ggplot(null_world_beef_pork, aes(x = simulated_diffs)) +
 cat("Beef vs. Pork p-value:", p_values[1], "\n")
 ```
 
-
 ```{r, echo=FALSE, message=FALSE}
 null_world_beef_cereal <- tibble(simulated_diffs = permuted_stats[, 2])
 
@@ -79,7 +75,6 @@ ggplot(null_world_beef_cereal, aes(x = simulated_diffs)) +
   labs(x = "Mean Weight Gain (Beef vs. Cereal)")
 cat("Beef vs. Cereal p-value:", p_values[2], "\n")
 ```
-
 
 ```{r, echo=FALSE, message=FALSE}
 null_world_pork_cereal <- tibble(simulated_diffs = permuted_stats[, 3])
