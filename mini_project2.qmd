@@ -4,12 +4,13 @@ sidebar: false
 editor_options: 
   chunk_output_type: console
 ---
+
 ```{r, include=FALSE}
 library(Stat2Data)
 library(tidyverse)
 ```
 
-### Fat Rats!
+### Fat Rats!   ![](images/FP_5427726_BARM_Rats_071810.webp)
 
 For this project, I examined the dataset FatRats, which has data from an experiment on the effects of diet on the weight gain of rats. The study had 60 baby rat participants, which were split up into groups and fed different sources of protein(Beef, Cereal, and Pork). The resulting dataset shows the weight gain for each rat from their protein source.
 
