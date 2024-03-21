@@ -124,7 +124,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#fat-rats" id="toc-fat-rats" class="nav-link active" data-scroll-target="#fat-rats">Fat Rats! <img src="images/FP_5427726_BARM_Rats_071810.webp" class="img-fluid"></a></li>
+  <li><a href="#fat-rats" id="toc-fat-rats" class="nav-link active" data-scroll-target="#fat-rats">Fat Rats!</a></li>
   </ul>
 </nav>
     </div>
@@ -149,7 +149,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <section id="fat-rats" class="level3">
-<h3 class="anchored" data-anchor-id="fat-rats">Fat Rats! <img src="images/FP_5427726_BARM_Rats_071810.webp" class="img-fluid"></h3>
+<h3 class="anchored" data-anchor-id="fat-rats">Fat Rats!</h3>
+<p><img src="images/FP_5427726_BARM_Rats_071810.webp" class="img-fluid"></p>
 <p>For this project, I examined the dataset FatRats, which has data from an experiment on the effects of diet on the weight gain of rats. The study had 60 baby rat participants, which were split up into groups and fed different sources of protein(Beef, Cereal, and Pork). The resulting dataset shows the weight gain for each rat from their protein source.</p>
 <p>I decided to conduct a randomization-type test by simulating the behavior under the null hypothesis. I wanted to see if the results of the study would be significant. I did this by running simulations of the study and randomizing the protein source to see if a random test would produce significantly different responses than the experiment did.</p>
 <p>The following graphs show the difference in average weight gains between different proteins with the randomized test, which shows what might happen if protein had no effect. The hot pink vertical line shows the average weight gain from the study that was run. The p-values below each chart show the probability under the null hypothesis(our randomized experiment) of obtaining a test statistic at least as extreme as the one obtained. The p-values are calculated by looking at how many of the randomized statistics are greater than or equal to the observed statistics from the rat study.</p>
@@ -158,19 +159,19 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="mini_project2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Beef vs. Pork p-value: 0.288 </code></pre>
+<pre><code>Beef vs. Pork p-value: 0.297 </code></pre>
 </div>
 <div class="cell-output-display">
 <p><img src="mini_project2_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Beef vs. Cereal p-value: 0.281 </code></pre>
+<pre><code>Beef vs. Cereal p-value: 0.307 </code></pre>
 </div>
 <div class="cell-output-display">
 <p><img src="mini_project2_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Pork vs. Cereal p-value: 0.279 </code></pre>
+<pre><code>Pork vs. Cereal p-value: 0.293 </code></pre>
 </div>
 </div>
 <p>As we can see, all of the p-values are close to 0.3. Generally, if the p-value is less than 0.05, we will consider the results of the study statistically significant. Because these results are well over the point of statistical significance, we can fail to reject the null hypothesis and claim that the difference in weight gains due to different proteins is not statistically significant.</p>
