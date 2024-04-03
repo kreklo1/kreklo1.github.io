@@ -11,6 +11,7 @@ website:
       - file: rtip.qmd
       - sidebar:maps
       - file: mini_project2.qmd
+      - file: RATATOUILLE.qmd
 
   sidebar:
     - id: maps
