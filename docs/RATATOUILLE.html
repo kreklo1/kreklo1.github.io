@@ -193,11 +193,14 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </div>
+<p>While seeing these words is nice to get a taste for what the most used words are, it is also nice to have a more visual representation. Below is a word cloud containing the top 100 used words from the move. The bigger the word, the more it was used. By using a diagram like this, we can more easily see which words are the most commonly found, and the color codings show up what other words were used a similar amount of times.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>This representation can give us a lot more information about the Ratatouille movie and about what to expect to hear when watching it.</p>
+<p>ggplot(ratatouille, aes(x = id, fill = word)) + geom_histogram(binwidth = 1) + labs(title = “Temporal Analysis of Word Occurrences in Ratatouille”, x = “Word Occurrence ID”, y = “Frequency”, fill = “Word”) + theme_minimal()</p>
 
 
 

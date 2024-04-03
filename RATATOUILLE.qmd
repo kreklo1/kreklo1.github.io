@@ -98,7 +98,7 @@ wordcloud(words = distinct_rat$word, freq = distinct_rat$n, min.freq = 1,
 This representation can give us a lot more information about the Ratatouille movie and about what to expect to hear when watching it.
 
 
-```{r}
+
 ggplot(ratatouille, aes(x = id, fill = word)) +
   geom_histogram(binwidth = 1) +
   labs(title = "Temporal Analysis of Word Occurrences in Ratatouille",
@@ -106,4 +106,5 @@ ggplot(ratatouille, aes(x = id, fill = word)) +
        y = "Frequency",
        fill = "Word") +
   theme_minimal()
-```
+
+
