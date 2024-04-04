@@ -111,7 +111,7 @@ plot_rat<-ratatouille|> mutate(word=str_to_lower(word),
 ```{r}
 ggplot(plot_rat, aes(x = id, fill = reorder(word, -n), y=n)) +
   geom_col() +
-  labs(fill = "Word") +
+  labs(fill = "Word", x="Words", y="Amount used") +
   theme_minimal()
 ```
 
