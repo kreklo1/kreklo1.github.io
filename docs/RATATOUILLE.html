@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -189,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity.</p>
+<p>The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity. This graph has the words in order of appearance, so the left is the beginning of the movie, and as the movie progresses, we move to the right. We can see areas where the movie was more positive, and also areas that were more negative.</p>
 <p>Below we see a table with the 10 most used words in Ratatouille. To do this, I removed the stop words (common words that generally don’t hold significance like “the”) from the data and I ranked the leftover words by amount used. Unsurprisingly, we see that 3 of the words have to do with food, as it is a food movie. We also see that names/nicknames come up a lot, with Remy, Gusteau, Linguini and dad all making appearances. We see that both Gusteau and Gusteau’s are on the list because R treats them like different words, but adding them together would put Gusteau to 40 occurances and in second place behind chef. Rat is also fairly expected since the whole plot of the movie is about a rat. Somewhat surprising, however, is the word hey. I would think that it would be considered a stop word, however the set of stop words I used did not include it.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -233,25 +199,173 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>This representation can give us a lot more information about the Ratatouille movie and about what to expect to hear when watching it.</p>
+<p>Another way to look at the words used is shown below. Here, we can see the top 100 words in order of number of occurrences. The graph on the left shows how many times each of those words were used in the film. This gives us the same information as the word cloud, but it is a different way of looking at it!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot_rat<span class="ot">&lt;-</span>ratatouille<span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">word=</span><span class="fu">str_to_lower</span>(word),</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">word =</span> <span class="fu">gsub</span>(<span class="st">"([[:punct:]])(?=[^[:alnum:]]*$)"</span>, <span class="st">""</span>, word, <span class="at">perl =</span> <span class="cn">TRUE</span>))<span class="sc">|&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort=</span><span class="cn">TRUE</span>)<span class="sc">|&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words)<span class="sc">|&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">101</span>)<span class="sc">|&gt;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Joining with `by = join_by(word)`</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_rat, <span class="fu">aes</span>(<span class="at">x =</span> id, <span class="at">fill =</span> <span class="fu">reorder</span>(word, <span class="sc">-</span>n), <span class="at">y=</span>n)) <span class="sc">+</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Word"</span>) <span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">title</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Production company</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Release date</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Running time</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Country</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Running time (int)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Budget (float)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Box office (float)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Release date (datetime)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">imdb</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">metascore</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">rotten_tomatoes</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Produced by</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Written by</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Music by</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Distributed by</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Budget</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Box office</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Story by</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Cinematography</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Edited by</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Screenplay by</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Production companies</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Incredibles</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">['October 27, 2004 ( BFI London Film Festival )', 'November 5, 2004 (United States)']</td>
+<td style="text-align: left;">115 minutes</td>
+<td style="text-align: left;">United States</td>
+<td style="text-align: right;">115</td>
+<td style="text-align: right;">9.2e+07</td>
+<td style="text-align: right;">6.330e+08</td>
+<td style="text-align: left;">2004-10-27</td>
+<td style="text-align: left;">8.0</td>
+<td style="text-align: left;">90</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">John Walker</td>
+<td style="text-align: left;">Brad Bird</td>
+<td style="text-align: left;">Michael Giacchino</td>
+<td style="text-align: left;">Buena Vista Pictures Distribution</td>
+<td style="text-align: left;">$92 million</td>
+<td style="text-align: left;">$633 million</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">['Andrew Jimenez', 'Patrick Lin', 'Janet Lucroy']</td>
+<td style="text-align: left;">Stephen Schaffer</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">['Walt Disney Pictures', 'Pixar Animation Studios']</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ratatouille</td>
+<td style="text-align: left;">['Walt Disney Pictures', 'Pixar Animation Studios']</td>
+<td style="text-align: left;">['June 22, 2007 ( Kodak Theatre )', 'June 29, 2007 (United States)']</td>
+<td style="text-align: left;">111 minutes</td>
+<td style="text-align: left;">United States</td>
+<td style="text-align: right;">111</td>
+<td style="text-align: right;">1.5e+08</td>
+<td style="text-align: right;">6.207e+08</td>
+<td style="text-align: left;">2007-06-22</td>
+<td style="text-align: left;">8.0</td>
+<td style="text-align: left;">96</td>
+<td style="text-align: left;">96%</td>
+<td style="text-align: left;">Brad Lewis</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Michael Giacchino</td>
+<td style="text-align: left;">Buena Vista Pictures Distribution</td>
+<td style="text-align: left;">$150 million</td>
+<td style="text-align: left;">$620.7 million</td>
+<td style="text-align: left;">['Jan Pinkava', 'Jim Capobianco', 'Brad Bird']</td>
+<td style="text-align: left;">['Sharon Calahan', 'Robert Anderson']</td>
+<td style="text-align: left;">['Darren T. Holmes', 'Stan Webb']</td>
+<td style="text-align: left;">Brad Bird</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tomorrowland</td>
+<td style="text-align: left;">['Walt Disney Pictures', 'A113 Productions']</td>
+<td style="text-align: left;">['May 9, 2015 ( Disneyland )', 'May 22, 2015 (United States)']</td>
+<td style="text-align: left;">130 minutes</td>
+<td style="text-align: left;">United States</td>
+<td style="text-align: right;">130</td>
+<td style="text-align: right;">1.8e+08</td>
+<td style="text-align: right;">2.090e+08</td>
+<td style="text-align: left;">2015-05-09</td>
+<td style="text-align: left;">6.4</td>
+<td style="text-align: left;">60</td>
+<td style="text-align: left;">50%</td>
+<td style="text-align: left;">['Damon Lindelof', 'Brad Bird', 'Jeffrey Chernov']</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Michael Giacchino</td>
+<td style="text-align: left;">['Walt Disney Studios', 'Motion Pictures']</td>
+<td style="text-align: left;">$180–190 million</td>
+<td style="text-align: left;">$209 million</td>
+<td style="text-align: left;">['Damon Lindelof', 'Brad Bird', 'Jeff Jensen']</td>
+<td style="text-align: left;">Claudio Miranda</td>
+<td style="text-align: left;">['Walter Murch', 'Craig Wood']</td>
+<td style="text-align: left;">['Damon Lindelof', 'Brad Bird']</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Incredibles 2</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">['June 5, 2018 ( Los Angeles )', 'June 15, 2018 (United States)']</td>
+<td style="text-align: left;">118 minutes</td>
+<td style="text-align: left;">United States</td>
+<td style="text-align: right;">118</td>
+<td style="text-align: right;">2.0e+08</td>
+<td style="text-align: right;">1.243e+09</td>
+<td style="text-align: left;">2018-06-05</td>
+<td style="text-align: left;">7.6</td>
+<td style="text-align: left;">80</td>
+<td style="text-align: left;">93%</td>
+<td style="text-align: left;">['John Walker', 'Nicole Paradis Grindle']</td>
+<td style="text-align: left;">Brad Bird</td>
+<td style="text-align: left;">Michael Giacchino</td>
+<td style="text-align: left;">['Walt Disney Studios', 'Motion Pictures']</td>
+<td style="text-align: left;">$200 million</td>
+<td style="text-align: left;">$1.243 billion</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">['Mahyar Abousaeedi (camera)', 'Erik Smitt (lighting)']</td>
+<td style="text-align: left;">Stephen Schaffer</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">['Walt Disney Pictures', 'Pixar Animation Studios']</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
 </div>
 

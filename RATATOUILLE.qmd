@@ -68,7 +68,7 @@ sentiment_rat|>
   theme(axis.text.x = element_blank())
 ```
 
-The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity.
+The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity. This graph has the words in order of appearance, so the left is the beginning of the movie, and as the movie progresses, we move to the right. We can see areas where the movie was more positive, and also areas that were more negative.
 
 Below we see a table with the 10 most used words in Ratatouille. To do this, I removed the stop words (common words that generally don't hold significance like "the") from the data and I ranked the leftover words by amount used. Unsurprisingly, we see that 3 of the words have to do with food, as it is a food movie. We also see that names/nicknames come up a lot, with Remy, Gusteau, Linguini and dad all making appearances. We see that both Gusteau and Gusteau's are on the list because R treats them like different words, but adding them together would put Gusteau to 40 occurances and in second place behind chef. Rat is also fairly expected since the whole plot of the movie is about a rat. Somewhat surprising, however, is the word hey. I would think that it would be considered a stop word, however the set of stop words I used did not include it.
 
@@ -95,10 +95,10 @@ wordcloud(words = distinct_rat$word, freq = distinct_rat$n, min.freq = 1,
           colors = brewer.pal(8, "Dark2"))
 ```
 
-This representation can give us a lot more information about the Ratatouille movie and about what to expect to hear when watching it.
+Another way to look at the words used is shown below. Here, we can see the top 100 words in order of number of occurrences. The graph on the left shows how many times each of those words were used in the film. This gives us the same information as the word cloud, but it is a different way of looking at it!
 
 
-```{r}
+```{r, include=FALSE}
 plot_rat<-ratatouille|> mutate(word=str_to_lower(word),
   word = gsub("([[:punct:]])(?=[^[:alnum:]]*$)", "", word, perl = TRUE))|>
   count(word, sort=TRUE)|>
@@ -108,10 +108,23 @@ plot_rat<-ratatouille|> mutate(word=str_to_lower(word),
 
 ```
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(plot_rat, aes(x = id, fill = reorder(word, -n), y=n)) +
   geom_col() +
   labs(fill = "Word", x="Words", y="Amount used") +
   theme_minimal()
 ```
 
+Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies.
+
+```{r, include=FALSE}
+disney_movies <- read_csv("disney_movie_data_final.csv")
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+same_director <- disney_movies[str_detect(disney_movies$`Directed by`, "Bird"), ] |>
+  select(-`...1`, -Language, -`Directed by`, -Starring, -`Narrated by`, -`Adaptation by`, -Traditional, -Simplified, -`Based on`)
+
+kable(same_director, format = "html")|>
+  kable_styling()
+```
