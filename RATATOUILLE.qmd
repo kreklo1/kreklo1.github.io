@@ -103,18 +103,15 @@ plot_rat<-ratatouille|> mutate(word=str_to_lower(word),
   word = gsub("([[:punct:]])(?=[^[:alnum:]]*$)", "", word, perl = TRUE))|>
   count(word, sort=TRUE)|>
   anti_join(stop_words)|>
-  slice(2:999)|>
-  mutate(id = 1:998)
+  slice(2:100)|>
+  mutate(id = 1:99)
 
 ```
 
 ```{r}
 ggplot(plot_rat, aes(x = id, fill = word)) +
-  geom_histogram() +
-  labs(title = "Temporal Analysis of Word Occurrences in Ratatouille",
-       x = "Word Occurrence ID",
-       y = "Frequency",
-       fill = "Word") +
+  geom_bar() +
+  labs(fill = "Word") +
   theme_minimal()
 ```
 
