@@ -115,7 +115,7 @@ ggplot(plot_rat, aes(x = id, fill = reorder(word, -n), y=n)) +
   theme_minimal()
 ```
 
-Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies.
+Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. Here, I decided to find the movies with the same director as Ratatouille to compare, so the following table shows the movies from this dataset that were directed by Brad Bird.
 
 ```{r, include=FALSE}
 disney_movies <- read_csv("disney_movie_data_final.csv")
@@ -123,7 +123,8 @@ disney_movies <- read_csv("disney_movie_data_final.csv")
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 same_director <- disney_movies[str_detect(disney_movies$`Directed by`, "Bird"), ] |>
-  select(-`...1`, -Language, -`Directed by`, -Starring, -`Narrated by`, -`Adaptation by`, -Traditional, -Simplified, -`Based on`)
+  select(-`...1`, -Language, -`Directed by`, -Starring, -`Narrated by`, -`Adaptation by`, -Traditional, -Simplified, -`Based on`)|>
+  slice(2:5)
 
 kable(same_director, format = "html")|>
   kable_styling()
