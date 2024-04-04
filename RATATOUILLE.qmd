@@ -103,8 +103,8 @@ plot_rat<-ratatouille|> mutate(word=str_to_lower(word),
   word = gsub("([[:punct:]])(?=[^[:alnum:]]*$)", "", word, perl = TRUE))|>
   count(word, sort=TRUE)|>
   anti_join(stop_words)|>
-  slice(2:100)|>
-  mutate(id = 1:99)
+  slice(2:101)|>
+  mutate(id = 1:100)
 
 ```
 
