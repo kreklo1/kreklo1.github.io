@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -156,6 +190,59 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity. This graph has the words in order of appearance, so the left is the beginning of the movie, and as the movie progresses, we move to the right. We can see areas where the movie was more positive, and also areas that were more negative.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>chef_occurrences <span class="ot">&lt;-</span> <span class="fu">str_detect</span>(ratatouille<span class="sc">$</span>word, <span class="st">"[Cc]hef"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>gusteau_occurrences <span class="ot">&lt;-</span> <span class="fu">str_detect</span>(ratatouille<span class="sc">$</span>word, <span class="st">"[Gg]usteau"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>rat_occurrences <span class="ot">&lt;-</span> <span class="fu">str_detect</span>(ratatouille<span class="sc">$</span>word, <span class="st">"[Rr]at"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>cook_occurrences <span class="ot">&lt;-</span> <span class="fu">str_detect</span>(ratatouille<span class="sc">$</span>word, <span class="st">"[Cc]ook"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>dad_occurrences <span class="ot">&lt;-</span> <span class="fu">str_detect</span>(ratatouille<span class="sc">$</span>word, <span class="st">"[Dd]ad"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>chef_yes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(chef_occurrences), <span class="at">chef_occurs =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>chef_no <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(<span class="sc">!</span>chef_occurrences), <span class="at">chef_occurs =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>gusteau_yes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(gusteau_occurrences), <span class="at">gusteau_occurs=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>gusteau_no <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(<span class="sc">!</span>gusteau_occurrences), <span class="at">gusteau_occurs=</span><span class="cn">FALSE</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>rat_yes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(rat_occurrences), <span class="at">rat_occurs=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>rat_no <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(<span class="sc">!</span>rat_occurrences), <span class="at">rat_occurs=</span><span class="cn">FALSE</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>cook_yes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(cook_occurrences), <span class="at">cook_occurs=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>cook_no <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(<span class="sc">!</span>cook_occurrences), <span class="at">cook_occurs=</span><span class="cn">FALSE</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>dad_yes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(dad_occurrences), <span class="at">dad_occurs=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>dad_no <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">which</span>(<span class="sc">!</span>dad_occurrences), <span class="at">dad_occurs=</span><span class="cn">FALSE</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> chef_no, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Chef"</span>, <span class="at">color =</span> <span class="st">"Chef No"</span>), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> chef_yes, <span class="at">width=</span><span class="dv">0</span>, <span class="at">height=</span><span class="fl">0.025</span>, <span class="at">alpha=</span><span class="fl">0.7</span>, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Chef"</span>, <span class="at">color =</span> <span class="st">"Chef Yes"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> gusteau_no, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Gusteau"</span>, <span class="at">color =</span> <span class="st">"Gusteau No"</span>), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> gusteau_yes, <span class="at">width=</span><span class="dv">0</span>, <span class="at">height=</span><span class="fl">0.025</span>, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Gusteau"</span>, <span class="at">color =</span> <span class="st">"Gusteau Yes"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> rat_no, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Rat"</span>, <span class="at">color =</span> <span class="st">"Rat No"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> rat_yes, <span class="at">width=</span><span class="dv">0</span>, <span class="at">height=</span><span class="fl">0.025</span>, <span class="at">alpha=</span><span class="fl">0.7</span>, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Rat"</span>, <span class="at">color =</span> <span class="st">"Rat Yes"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> cook_no, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Cook"</span>, <span class="at">color =</span> <span class="st">"Cook No"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> cook_yes, <span class="at">width=</span><span class="dv">0</span>, <span class="at">height=</span><span class="fl">0.025</span>, <span class="at">alpha=</span><span class="fl">0.7</span>, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Cook"</span>, <span class="at">color =</span> <span class="st">"Cook Yes"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> dad_no, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Dad"</span>, <span class="at">color =</span> <span class="st">"Dad No"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> dad_yes, <span class="at">width=</span><span class="dv">0</span>, <span class="at">height=</span><span class="fl">0.025</span>, <span class="at">alpha=</span><span class="fl">0.7</span>, <span class="fu">aes</span>(<span class="at">x =</span> row, <span class="at">y =</span> <span class="st">"Dad"</span>, <span class="at">color =</span> <span class="st">"Dad Yes"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Chef No"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"Chef Yes"</span> <span class="ot">=</span> <span class="st">"deeppink"</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"Gusteau No"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"Gusteau Yes"</span> <span class="ot">=</span> <span class="st">"deeppink"</span>,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"Rat No"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"Rat Yes"</span> <span class="ot">=</span> <span class="st">"deeppink"</span>,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"Cook No"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"Cook Yes"</span> <span class="ot">=</span> <span class="st">"deeppink"</span>,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"Dad No"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"Dad Yes"</span> <span class="ot">=</span> <span class="st">"deeppink"</span>)) <span class="sc">+</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Dad"</span><span class="ot">=</span><span class="st">"Dad"</span>, <span class="st">"Cook"</span><span class="ot">=</span><span class="st">"Cook"</span>, <span class="st">"Rat"</span><span class="ot">=</span><span class="st">"Rat"</span>, <span class="st">"Gusteau"</span><span class="ot">=</span><span class="st">"Gusteau"</span>, <span class="st">"Chef"</span><span class="ot">=</span><span class="st">"Chef"</span>)) <span class="sc">+</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Occurance of top words during the movie"</span>,</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Row number"</span>, <span class="at">y =</span> <span class="st">"Word"</span>) <span class="sc">+</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 <p>Below we see a table with the 10 most used words in Ratatouille. To do this, I removed the stop words (common words that generally don’t hold significance like “the”) from the data and I ranked the leftover words by amount used. Unsurprisingly, we see that 3 of the words have to do with food, as it is a food movie. We also see that names/nicknames come up a lot, with Remy, Gusteau, Linguini and dad all making appearances. We see that both Gusteau and Gusteau’s are on the list because R treats them like different words, but adding them together would put Gusteau to 40 occurances and in second place behind chef. Rat is also fairly expected since the whole plot of the movie is about a rat. Somewhat surprising, however, is the word hey. I would think that it would be considered a stop word, however the set of stop words I used did not include it.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -196,16 +283,16 @@ ul.task-list li input[type="checkbox"] {
 <p>While seeing these words is nice to get a taste for what the most used words are, it is also nice to have a more visual representation. Below is a word cloud containing the top 100 used words from the move. The bigger the word, the more it was used. By using a diagram like this, we can more easily see which words are the most commonly found, and the color codings show up what other words were used a similar amount of times.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Another way to look at the words used is shown below. Here, we can see the top 100 words in order of number of occurrences. The graph on the left shows how many times each of those words were used in the film. This gives us the same information as the word cloud, but it is a different way of looking at it!</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies.</p>
+<p>Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. Here, I decided to find the movies with the same director as Ratatouille to compare, so the following table shows the movies from this dataset that were directed by Brad Bird.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
@@ -238,31 +325,6 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">The Incredibles</td>
 <td style="text-align: left;">NA</td>
 <td style="text-align: left;">['October 27, 2004 ( BFI London Film Festival )', 'November 5, 2004 (United States)']</td>
@@ -287,7 +349,7 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: left;">NA</td>
 <td style="text-align: left;">['Walt Disney Pictures', 'Pixar Animation Studios']</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Ratatouille</td>
 <td style="text-align: left;">['Walt Disney Pictures', 'Pixar Animation Studios']</td>
 <td style="text-align: left;">['June 22, 2007 ( Kodak Theatre )', 'June 29, 2007 (United States)']</td>
@@ -312,7 +374,7 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: left;">Brad Bird</td>
 <td style="text-align: left;">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Tomorrowland</td>
 <td style="text-align: left;">['Walt Disney Pictures', 'A113 Productions']</td>
 <td style="text-align: left;">['May 9, 2015 ( Disneyland )', 'May 22, 2015 (United States)']</td>
@@ -337,7 +399,7 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: left;">['Damon Lindelof', 'Brad Bird']</td>
 <td style="text-align: left;">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Incredibles 2</td>
 <td style="text-align: left;">NA</td>
 <td style="text-align: left;">['June 5, 2018 ( Los Angeles )', 'June 15, 2018 (United States)']</td>
@@ -366,6 +428,11 @@ ul.task-list li input[type="checkbox"] {
 </table>
 
 
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
