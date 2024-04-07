@@ -209,7 +209,7 @@ hist(disney_movies$`Running time`, freq = FALSE, col = "deeppink", main = "Distr
 
 
 
-```{r, echo=FALSE, include=FALSE}
+```{r, echo=FALSE, include=FALSE, warning=FALSE}
 library(plotly)
 
 movies_by_time<- disney_movies[order(disney_movies$`Running time`), ]
@@ -253,7 +253,7 @@ subplot(histogram, layout)
 
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, include=FALSE}
 robotstxt::paths_allowed("https://www.rottentomatoes.com/m/ratatouille")
 
 library(polite)
@@ -280,7 +280,7 @@ user_review <- str_to_lower(user_reviews)
 top_critics <- str_to_lower(all_critics)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 format_reviews <- data.frame(review = user_reviews)
 other_format <- data.frame(review = all_critics)
 
@@ -301,7 +301,7 @@ all_reviews<-all_reviews|>
 
 ```
 
-```{r, message=FALSE, echo=FALSE}
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
 sentiment_review <- all_reviews |>
   inner_join(get_sentiments("afinn"), by = "word") |>
   group_by(id) |>
