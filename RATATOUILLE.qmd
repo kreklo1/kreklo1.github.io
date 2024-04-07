@@ -19,6 +19,8 @@ library(kableExtra)
 library(circlize)
 library(wordcloud)
 library(viridis)
+library(rvest)
+library(plotly)
 ```
 
 ```{r, include=FALSE}
@@ -74,7 +76,7 @@ sentiment_rat|>
 
 The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity. This graph has the words in order of appearance, so the left is the beginning of the movie, and as the movie progresses, we move to the right. We can see areas where the movie was more positive, and also areas that were more negative.
 
-```{r}
+```{r, echo=FALSE}
 chef_occurrences <- str_detect(ratatouille$word, "[Cc]hef")
 
 gusteau_occurrences <- str_detect(ratatouille$word, "[Gg]usteau")
@@ -179,14 +181,22 @@ Now that we know quite a bit about the contents of Ratatouille, we can look at h
 disney_movies <- read_csv("disney_movie_data_final.csv")
 ```
 
+```{r, include=FALSE}
+disney_movies[str_detect(disney_movies$`Music by`,"Giacchino"),]|>
+  select(c(title, `Music by`, `Directed by`))
+```
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 same_director <- disney_movies[str_detect(disney_movies$`Directed by`, "Bird"), ] |>
-  select(-`...1`, -Language, -`Directed by`, -Starring, -`Narrated by`, -`Adaptation by`, -Traditional, -Simplified, -`Based on`)|>
+  select(title, `Production company`, `Release date`, `Running time`, `Directed by`, `Music by`, Budget)|>
   slice(2:5)
 
 kable(same_director, format = "html")|>
   kable_styling()
 ```
+
+I found it interesting to see that all of the movies directed by Brad Bird in this dataset had music by Michael Giacchino. Looking further, Giacchino did the music for 11 of the movies in the dataset, including some great soundtracks including Cars 2 and Up.
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 disney_movies$`Running time` <- sub(" .*", "", disney_movies$`Running time`) 
@@ -198,5 +208,126 @@ hist(disney_movies$`Running time`, freq = FALSE, col = "deeppink", main = "Distr
 ```
 
 
+
+```{r, echo=FALSE, include=FALSE}
+library(plotly)
+
+movies_by_time<- disney_movies[order(disney_movies$`Running time`), ]
+
+# Define the number of bins
+num_bins <- 109
+
+# Create empty vectors to store bin boundaries and hover text
+bin_boundaries <- numeric(num_bins + 1)
+hover_text <- vector("list", num_bins)
+
+# Calculate bin boundaries
+bin_width <- (max(movies_by_time$`Running time`) - min(movies_by_time$`Running time`)) / num_bins
+bin_boundaries <- seq(min(movies_by_time$`Running time`), max(movies_by_time$`Running time`) + bin_width, by = bin_width)
+
+# Loop through each bin and populate hover text with movies falling into that bin
+for (i in 1:num_bins) {
+  bin_movies <- movies_by_time$title[movies_by_time$`Running time` >= bin_boundaries[i] & movies_by_time$`Running time` < bin_boundaries[i + 1]]
+  bin_running_times <- movies_by_time$`Running time`[movies_by_time$`Running time` >= bin_boundaries[i] & movies_by_time$`Running time` < bin_boundaries[i + 1]]
+  hover_text[[i]] <- paste("Movies:", paste(bin_movies, collapse = ", "), "<br>Running Times:", paste(bin_running_times, collapse = ", "))
+}
+
+# Create the histogram
+histogram <- plot_ly(x = ~movies_by_time$`Running time`, type = "histogram", 
+                     marker = list(color = "deeppink"), 
+                     name = "Running Time",
+                     hoverinfo = "text",
+                     text = hover_text,
+                     nbinsx = num_bins)
+
+# Layout for the histogram
+layout <- list(title = "Distribution of Movie Lengths",
+               xaxis = list(title = "Running Time"),
+               yaxis = list(title = "Frequency"))
+
+# Display the interactive histogram
+subplot(histogram, layout)
+
+
+```
+
+
+
+```{r, echo=FALSE}
+robotstxt::paths_allowed("https://www.rottentomatoes.com/m/ratatouille")
+
+library(polite)
+movie <- "https://www.rottentomatoes.com/m/ratatouille" |>
+  bow() |> scrape()
+
+all_critics <- "https://www.rottentomatoes.com/m/ratatouille/reviews" |> 
+  bow() |> 
+  scrape()
+all_critics <- html_nodes(all_critics, ".review-text")
+all_critics <- html_text(all_critics)
+
+user_reviews <- "https://www.rottentomatoes.com/m/ratatouille/reviews?type=user" |> 
+  bow() |> 
+  scrape()
+user_reviews <- html_nodes(user_reviews, ".js-review-text")
+user_reviews <- html_text(user_reviews)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+user_reviews <- str_trim(user_reviews)
+top_critics <- str_trim(all_critics)
+user_review <- str_to_lower(user_reviews)
+top_critics <- str_to_lower(all_critics)
+```
+
+```{r, echo=FALSE}
+format_reviews <- data.frame(review = user_reviews)
+other_format <- data.frame(review = all_critics)
+
+neat_reviews <- format_reviews |>
+  mutate(word = str_split(review, "\\s+")) |>
+  select(word)|>
+  unnest(word)
+
+other_neat <- other_format |>
+  mutate(word = str_split(review, "\\s+"))|>
+  select(word)|>
+  unnest(word)
+
+all_reviews<-neat_reviews |> full_join(other_neat)
+
+all_reviews<-all_reviews|>
+  mutate(id = 1:2649)
+
+```
+
+```{r, message=FALSE, echo=FALSE}
+sentiment_review <- all_reviews |>
+  inner_join(get_sentiments("afinn"), by = "word") |>
+  group_by(id) |>
+  summarise(sentiment_review = sum(value))
+
+sentiment_review <- sentiment_review |>
+  mutate(sentiment = ifelse(sentiment_review > 0, "Positive",
+                            ifelse(sentiment_review < 0, "Negative", "Neutral")))
+
+sentiment_review <- inner_join(ratatouille, sentiment_review, by = "id")|>
+  select(-id)
+
+sentiment_review<-distinct(sentiment_review)
+
+sentiment_review|>
+  group_by(sentiment)|>
+  mutate(n_words=n())|>
+  ggplot(aes(x = word, y = sentiment_review, fill = sentiment)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Sentiment Analysis of Reviews",
+       x = "Words",
+       y = "Score") +
+  theme_minimal()+
+  theme(axis.text.x = element_blank())+
+  guides(fill = guide_legend(reverse = TRUE))+
+  scale_fill_manual(values = c("Positive" = "deeppink", "Negative" = "darkred"))
+```
 
 
