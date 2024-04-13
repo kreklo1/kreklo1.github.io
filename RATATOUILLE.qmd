@@ -223,7 +223,7 @@ other_neat <- other_format |>
 all_reviews<-neat_reviews |> full_join(other_neat)
 
 all_reviews<-all_reviews|>
-  mutate(id = 1:2649)
+  mutate(id = 1:2637)
 
 ```
 
@@ -273,21 +273,6 @@ kable(table, format = "html") |>
 
 ```
 
-```{r, include=FALSE}
-sentiment_review|>
-  filter(sentiment_review<=0)
-
-bad_reviews<-str_detect(user_reviews, "cry|bored|hard|struggling|critic|leave")
-
-print(user_reviews[bad_reviews])
-
-review_table<-data.frame(print(user_reviews[bad_reviews]))
-
-
-kable(review_table, format = "html", col.names = c("Review with negative? word")) |>
-  kable_styling(full_width = FALSE)
-
-```
 
 As we can see, none of these words that are considered to have negative connotations are actually being used in a negative sense. On the contrary, they are actually all part of very positive reviews about the movie.
 
@@ -321,9 +306,46 @@ disney_movies$`Running time` <- as.numeric(disney_movies$`Running time`)
 disney_movies <- disney_movies[!is.na(disney_movies$`Running time`),]
 
 
+
 hist(disney_movies$`Running time`, freq = FALSE, col = "deeppink", main = "Distribution of Disney Movie Lengths", xlab="Running Time", ylab="Proportion of Movies")
+
 ```
 
 
+```{r disney_movie_lengthss, echo=FALSE, message=FALSE, warning=FALSE}
+disney_movies$`Box office (float)` <- sub(" .*", "", disney_movies$`Box office (float)`) 
+disney_movies$`Box office (float)` <- as.numeric(disney_movies$`Box office (float)`) 
+disney_movies <- disney_movies[!is.na(disney_movies$`Box office (float)`),]
 
+
+hist(disney_movies$`Box office (float)`, freq = TRUE, col = "deeppink", main = "Box Office Success for Disney Movies", xlab="Box Office", ylab="Number of Movies")
+abline(v = 620700000, col = "blue", lwd = 2)
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+observed_statistic <- disney_movies$`Box office (float)`[disney_movies$title == "Ratatouille"]
+num_iterations <- 1000
+simulated_statistics <- numeric(num_iterations)
+
+for (i in 1:num_iterations) {
+  random_box_office <- sample(disney_movies$`Box office (float)`)
+  new_test_stat <- random_box_office
+  simulated_statistics[i] <- new_test_stat
+}
+
+p_value <- mean(simulated_statistics >= observed_statistic)
+print(p_value)
+
+simulated_df <- data.frame(simulated_statistic = simulated_statistics)
+
+ggplot(simulated_df, aes(x = simulated_statistic)) +
+  geom_histogram(color = "pink2", fill = "lightpink", bins = 30) +
+  geom_vline(xintercept = observed_statistic, color = "hotpink", linewidth = 1) +
+  labs(title = "Ratatouille Observed Performance vs. Simulated Statistics of Disney Movies",
+       x = "Box Office Performance",
+       y = "Amount of Movies") +
+  theme_minimal()
+
+```
 
