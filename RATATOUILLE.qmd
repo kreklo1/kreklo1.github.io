@@ -42,6 +42,7 @@ ratatouille<-ratatouille|>
 ratatouille|>
   distinct(word)
 ```
+
 ###Ratatouille
 
 Did you know that in the Ratatouille movie, only 7,526 words were spoken? According to a Reddit [post](https://www.reddit.com/r/Screenwriting/comments/od3v7h/wordcounts_of_famous_screenplays/), the average screenplay has about 22,000 words(although Reddit is definitely not the most reliable source). Within those 7,526 words in Ratatouille, there were 2,193 distinct words spoken. This may seem like very few, but any Ratatouille lover knows how impactful those 2,193 different words were.
@@ -68,7 +69,8 @@ sentiment_rat|>
   geom_bar(stat = "identity") +
   labs(title = "Sentiment Analysis",
        x = "Words",
-       y = "Score") +
+       y = "Score",
+       caption="data source: http://www.script-o-rama.com/movie_scripts/a2/ratatouille-script-transcript.html") +
   theme_minimal()+
   theme(axis.text.x = element_blank())+
   guides(fill = guide_legend(reverse = TRUE))+
@@ -78,8 +80,8 @@ sentiment_rat|>
 
 The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity. This graph has the words in order of appearance, so the left is the beginning of the movie, and as the movie progresses, we move to the right. We can see areas where the movie was more positive, and also areas that were more negative.
 
-
 Below we see a table with the 10 most used words in Ratatouille. To do this, I removed the stop words (common words that generally don't hold significance like "the") from the data and I ranked the leftover words by amount used. Unsurprisingly, we see that 3 of the words have to do with food, as it is a food movie. We also see that names/nicknames come up a lot, with Remy, Gusteau, Linguini and dad all making appearances. Rat is also fairly expected since the whole plot of the movie is about a rat. Somewhat surprising, however, is the word hey. I would think that it would be considered a stop word, however the set of stop words I used did not include it.
+
 ```{r word_table, echo=FALSE, message=FALSE, warning=FALSE}
 
 ratatouille<-ratatouille|>
@@ -111,7 +113,6 @@ wordcloud(words = distinct_rat$word, freq = distinct_rat$n, min.freq = 1,
           max.words = 100, random.order = FALSE, rot.per = 0.35, 
           colors = pinkalicious)
 ```
-
 
 Now that we know which words were used the most in Ratatouille, we can look into where in the movie these words show up. For the next graph, I looked into the top 5 words and where they are positioned in comparison to all other words in the movie. We can see that "dad" was used mostly in 3 separate areas of the movie, whereas "chef" was used pretty regularly throughout.
 
@@ -161,7 +162,7 @@ ggplot() +
                                  "Dad No" = "black", "Dad Yes" = "deeppink")) +
     scale_y_discrete(labels=c("Dad"="Dad", "Cook"="Cook", "Rat"="Rat", "Gusteau"="Gusteau", "Chef"="Chef")) +
   labs(title = "Occurance of top words during the movie",
-       x = "Position in Movie", y = "Word") +
+       x = "Position in Movie", y = "Word", caption="data source: http://www.script-o-rama.com/movie_scripts/a2/ratatouille-script-transcript.html") +
   theme_minimal()+
   theme(legend.position="none")
 
@@ -179,10 +180,9 @@ plot_rat<-ratatouille|> mutate(word=str_to_lower(word),
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 ggplot(plot_rat, aes(x = id, fill = reorder(word, -n), y=n)) +
   geom_col() +
-  labs(fill = "Word", x="Words", y="Amount used") +
+  labs(fill = "Word", x="Words", y="Amount used", caption="data source: http://www.script-o-rama.com/movie_scripts/a2/ratatouille-script-transcript.html") +
   theme_minimal()
 ```
-
 
 Anyone who has watched Ratatouille surely understands that it is a masterpiece, but what do people really think about the film? To find this out, we can look to the master site of movie reviews, Rotten Tomatoes. On Rotten Tomatoes, Ratatouille scores a 96% on the Tomatometer (critic reviews) and an 87% for audience ratings. It is clear that the critics are the true experts in what makes a good movie! The graph below shows a sentiment analysis of words from all reviews (critic and audience).
 
@@ -256,13 +256,15 @@ sentiment_review|>
   geom_bar(stat = "identity") +
   labs(title = "Sentiment Analysis of Reviews",
        x = "Words",
-       y = "Score") +
+       y = "Score",
+       caption= "data source:https://www.rottentomatoes.com/m/ratatouille") +
   theme_minimal()+
   theme(axis.text.x = element_blank())+
   guides(fill = guide_legend(reverse = TRUE))+
   scale_fill_manual(values = c("Positive" = "deeppink", "Negative" = "darkred"))
 ```
-We say that Ratatouille has, by far, had a positive impact on watchers. However, it leaves one to wonder what some of the negative reviews had to say about the movie. The negatively connotated words in these reviews are "cry", "bored", "hard", "struggling", "critic", and "leave". Many of these words are not inherently negative, and would depend on the context. 
+
+We say that Ratatouille has, by far, had a positive impact on watchers. However, it leaves one to wonder what some of the negative reviews had to say about the movie. The negatively connotated words in these reviews are "cry", "bored", "hard", "struggling", "critic", and "leave". Many of these words are not inherently negative, and would depend on the context.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 table<-data.frame(word = c("cry", "bored", "hard", "struggling", "critic", "leave"),
@@ -277,19 +279,15 @@ str_view(top_critics, "leave")))
 
 kable(table, format = "html") |>
   kable_styling(full_width = FALSE)
-
 ```
-
 
 As we can see, none of these words that are considered to have negative connotations are actually being used in a negative sense. On the contrary, they are actually all part of very positive reviews about the movie.
 
-
-Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. I know that for a lot of people, time is valuable, so I wanted to see which movies are conserving your time and which are taking more of it. For the first comparison, I looked at the lengths of the movies. 
+Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. I know that for a lot of people, time is valuable, so I wanted to see which movies are conserving your time and which are taking more of it. For the first comparison, I found a [dataset](https://github.com/KeithGalli/disney-data-science-tasks/blob/master/dataset/disney_movie_data_final.csv) of many Disney movies and looked at the lengths of the movies.
 
 ```{r, include=FALSE}
 disney_movies <- read_csv("disney_movie_data_final.csv")
 ```
-
 
 ```{r disney_movie_lengths, echo=FALSE, message=FALSE, warning=FALSE}
 disney_movies$`Running time` <- sub(" .*", "", disney_movies$`Running time`) 
@@ -305,9 +303,11 @@ abline(v = 111, col = "purple3", lwd = 2)
 #mean(disney_movies$`Running time`)
 #sd(disney_movies$`Running time`)
 ```
+
 We can see that Ratatouille is just slightly over the average running time, with 111 minutes. The mean running time for the Disney movies in my dataset is 97.51009, with a standard deviation of 18.11338. This means the Ratatouille is within one standard deviation of the mean and is pretty average as far as movie length.
 
 One part of Ratatouille that may be less average is its box office statistics. Ratatouille was, and continues to be, very popular, so unsurprisingly it did very well and has a very high box office score of 620.7 million dollars.
+
 ```{r disney_box_office, echo=FALSE, message=FALSE, warning=FALSE}
 disney_movies$`Box office (float)` <- sub(" .*", "", disney_movies$`Box office (float)`) 
 disney_movies$`Box office (float)` <- as.numeric(disney_movies$`Box office (float)`) 
@@ -320,12 +320,13 @@ abline(v = 620700000, col = "purple3", lwd = 2)
 #mean(disney_movies$`Box office (float)`)
 #sd(disney_movies$`Box office (float)`)
 ```
-The average box office for the Disney movies is $169.8 million, however there is a $277.4 million standard deviation, so there is definitely a very wide range. Nonetheless, Ratatouille is still very high on the list and did very well for a Disney movie.
 
-I was also interested in looking into how the box office scores of Disney movies compared with those of a different company's movies. I found a dataset of Warner Bros. movies and their box scores, and performed a two-sample t-test to determine if there is a significant difference in the mean box office earnings of Disney movies and Warner Bros. movies.
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+The average box office for the Disney movies is \$169.8 million, however there is a \$277.4 million standard deviation, so there is definitely a very wide range. Nonetheless, Ratatouille is still very high on the list and did very well for a Disney movie.
+
+I was also interested in looking into how the box office scores of Disney movies compared with those of a different company's movies. I found a [dataset](https://the-numbers.com/box-office-records/domestic/all-movies/theatrical-distributors/warner-bros/901) of Warner Bros. movies and their box scores to look into the difference between their means.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 warner_bros_movies <- read_csv("Warner Bros Movies - Sheet1.csv")
-
 warner_bros_movies$`Worldwide\nBox Office` <- gsub("\\$", "", warner_bros_movies$`Worldwide\nBox Office`)
 
 warner_bros_movies$`Worldwide\nBox Office` <- gsub("\\,", "", warner_bros_movies$`Worldwide\nBox Office`)
@@ -333,10 +334,25 @@ warner_bros_movies$`Worldwide\nBox Office` <- gsub("\\,", "", warner_bros_movies
 warner_bros_movies$`Worldwide\nBox Office` <- as.numeric(warner_bros_movies$`Worldwide\nBox Office`) 
 warner_bros_movies <- warner_bros_movies[!is.na(warner_bros_movies$`Worldwide\nBox Office`),]
 
-  
+
+ggplot() +
+  geom_density(data = disney_movies, aes(x = `Box office (float)`, fill = "Disney"), alpha = 0.5) +
+  geom_density(data = warner_bros_movies, aes(x = `Worldwide\nBox Office`, fill = "Warner Bros"), alpha = 0.5) +
+  scale_fill_manual(values = c("Disney" = "deeppink", "Warner Bros" = "lightblue")) +
+  labs(title = "Distribution of Box Office Earnings",
+       x = "Box Office Earnings",
+       y = "Density", caption="data source: https://the-numbers.com/box-office-records/domestic/all-movies/theatrical-distributors/warner-bros/901") +
+  theme_minimal()
+```
+
+We can see that Warner Bros has more lower revenue movies, while Disney seems to have more higher revenue films. Because we cannot make definite conclusions from this graph, I performed a two-sample t-test to determine if there is a significant difference in the mean box office earnings of Disney movies and Warner Bros. movies.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 t.test(disney_movies$`Box office (float)`, warner_bros_movies$`Worldwide\nBox Office`)
 ```
+
 We can see that the results of this t-test find a significant difference in the means, with a p-value in the ten-thousandths. It shows much higher average box office earnings for the Disney movies than the Warner Bros movies, however there are several factors that could be affecting this. Firstly, my dataset for Warner Bros movies is much larger, meaning that it probably includes many smaller films that may have been small outliers and dragged the means down. Furthermore, I also got my dataset for the Disney movies from Kieth Galli's github and do not have information about how the films were chosen because it is not comprehensive of all Disney movies. One thing that could help find a more accurate result by making the datasets the same size and using the Warner Bros films that have the largest box office earnings.
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 warner_bros_movies$`Worldwide\nBox Office` <- as.numeric(warner_bros_movies$`Worldwide\nBox Office`) 
 warner_bros_movies <- warner_bros_movies[!is.na(warner_bros_movies$`Worldwide\nBox Office`),]
@@ -346,6 +362,7 @@ new_warner<-warner_bros_movies|>
   
 t.test(disney_movies$`Box office (float)`,  new_warner$`Worldwide\nBox Office`)
 ```
+
 Comparing the Disney movies to only the top Warner Bros movies just shows a larger gap, meaning that in reality, Disney movies have had much higher box office earnings and we can reject the null hypothesis and claim a statistical significance between the means. Yay Disney!
 
 After seeing how successful these Disney movies were, we can see if there is any correlation between the amount spent on the movie and how well it did. To do this, I made a scatterplot looking at the relationship between budget and box office earnings.
@@ -360,6 +377,7 @@ disney_movies|>
   geom_smooth(se=FALSE, color="black")+
   theme_minimal()
 ```
+
 We can see a positive relationship, meaning that the movies with higher budgets tended to do better when they were released. The light pink and slightly larger point represents Ratatouille, so we can see that Ratatouille was very close to the regression line and was following the trend pretty closely.
 
 Knowing this, I was curious to see what the profits of movies looked like. I made a new variable that subtracted the budgets from the box office earnings to find the profit. I then put the 30 top movies by profit in a table.
@@ -380,7 +398,6 @@ kable(big_disney, format="html")|>
 
 ```
 
-In this table, Ratatouille takes 29th place as most profitable. Considering this is a dataset of 347 movies, that is quite impressive. It is also worth noting the $470.7 million profit -- the masterminds behind Ratatouille must be living well.
-
+In this table, Ratatouille takes 29th place as most profitable. Considering this is a dataset of 347 movies, that is quite impressive. It is also worth noting the \$470.7 million profit -- the masterminds behind Ratatouille must be living well.
 
 I hope you have enjoyed coming on this data journey with me, and I hope you learned something new (or many new things) about Ratatouille. Now that you have made it to the end, I think that you, dear reader, should have a seat, grab a snack, relax, and enjoy a wonderful screening of Ratatouille!

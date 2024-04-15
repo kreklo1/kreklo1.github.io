@@ -254,7 +254,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>As we can see, none of these words that are considered to have negative connotations are actually being used in a negative sense. On the contrary, they are actually all part of very positive reviews about the movie.</p>
-<p>Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. I know that for a lot of people, time is valuable, so I wanted to see which movies are conserving your time and which are taking more of it. For the first comparison, I looked at the lengths of the movies.</p>
+<p>Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. I know that for a lot of people, time is valuable, so I wanted to see which movies are conserving your time and which are taking more of it. For the first comparison, I found a <a href="https://github.com/KeithGalli/disney-data-science-tasks/blob/master/dataset/disney_movie_data_final.csv">dataset</a> of many Disney movies and looked at the lengths of the movies.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="RATATOUILLE_files/figure-html/disney_movie_lengths-1.png" class="img-fluid" width="672"></p>
@@ -268,7 +268,13 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>The average box office for the Disney movies is $169.8 million, however there is a $277.4 million standard deviation, so there is definitely a very wide range. Nonetheless, Ratatouille is still very high on the list and did very well for a Disney movie.</p>
-<p>I was also interested in looking into how the box office scores of Disney movies compared with those of a different company’s movies. I found a dataset of Warner Bros.&nbsp;movies and their box scores, and performed a two-sample t-test to determine if there is a significant difference in the mean box office earnings of Disney movies and Warner Bros.&nbsp;movies.</p>
+<p>I was also interested in looking into how the box office scores of Disney movies compared with those of a different company’s movies. I found a <a href="https://the-numbers.com/box-office-records/domestic/all-movies/theatrical-distributors/warner-bros/901">dataset</a> of Warner Bros.&nbsp;movies and their box scores to look into the difference between their means.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can see that Warner Bros has more lower revenue movies, while Disney seems to have more higher revenue films. Because we cannot make definite conclusions from this graph, I performed a two-sample t-test to determine if there is a significant difference in the mean box office earnings of Disney movies and Warner Bros.&nbsp;movies.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -304,7 +310,7 @@ mean of x mean of y
 <p>After seeing how successful these Disney movies were, we can see if there is any correlation between the amount spent on the movie and how well it did. To do this, I made a scatterplot looking at the relationship between budget and box office earnings.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We can see a positive relationship, meaning that the movies with higher budgets tended to do better when they were released. The light pink and slightly larger point represents Ratatouille, so we can see that Ratatouille was very close to the regression line and was following the trend pretty closely.</p>
