@@ -42,6 +42,7 @@ ratatouille<-ratatouille|>
 ratatouille|>
   distinct(word)
 ```
+###Ratatouille
 
 Did you know that in the Ratatouille movie, only 7,526 words were spoken? According to a Reddit [post](https://www.reddit.com/r/Screenwriting/comments/od3v7h/wordcounts_of_famous_screenplays/), the average screenplay has about 22,000 words(although Reddit is definitely not the most reliable source). Within those 7,526 words in Ratatouille, there were 2,193 distinct words spoken. This may seem like very few, but any Ratatouille lover knows how impactful those 2,193 different words were.
 
@@ -376,4 +377,4 @@ kable(big_disney, format="html")|>
 In this table, Ratatouille takes 29th place as most profitable. Considering this is a dataset of 347 movies, that is quite impressive. It is also worth noting the $470.7 million profit -- the masterminds behind Ratatouille must be living well.
 
 
-I hope you have enjoyed coming on this data journey with me, and I hope you learned something new(or many things) about Ratatouille. Since you have made it to the end, I think that you, dear reader, should have a seat, grab a snack, relax, and enjoy a wonderful screening of Ratatouille!
+I hope you have enjoyed coming on this data journey with me, and I hope you learned something new (or many new things) about Ratatouille. Now that you have made it to the end, I think that you, dear reader, should have a seat, grab a snack, relax, and enjoy a wonderful screening of Ratatouille!
