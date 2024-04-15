@@ -253,14 +253,14 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>As we can see, none of these words that are considered to have negative connotations are actually being used in a negative sense. On the contrary, they are actually all part of very positive reviews about the movie.</p>
-<p>Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. I know that for a lot of people, time is valuable, so which movies are conserving your time and which are taking more of it. For the first comparison, I looked at the lengths of the movies.</p>
+<p>Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. I know that for a lot of people, time is valuable, so I wanted to see which movies are conserving your time and which are taking more of it. For the first comparison, I looked at the lengths of the movies.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="RATATOUILLE_files/figure-html/disney_movie_lengths-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We can see that Ratatouille is just slightly over the average running time, with 111 minutes. The mean running time for the Disney movies in my dataset is 97.51009, with a standard deviation of 18.11338. This means the Ratatouille is within one standard deviation of the mean and is pretty average as far as movie length.</p>
-<p>One part of Ratatouille that may be less average is its box office statistics. Ratatouille was, and continues to be, very popular so it did very well and has a very high box office score of 620.7 million dollars.</p>
+<p>One part of Ratatouille that may be less average is its box office statistics. Ratatouille was, and continues to be, very popular, so unsurprisingly it did very well and has a very high box office score of 620.7 million dollars.</p>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="RATATOUILLE_files/figure-html/disney_box_office-1.png" class="img-fluid" width="672"></p>
@@ -283,7 +283,7 @@ mean of x mean of y
 169826342 110848408 </code></pre>
 </div>
 </div>
-<p>We can see that the results of this t-test find a significant difference in the means, with a p-value in the ten-thousandths. It shows much higher average box office earnings for the Disney movies, however there are several factors that could be affecting this. Firstly, my dataset for Warner Bros movies is much larger, meaning that it probably includes many smaller films that may have been small outliers and dragged the means down. Furthermore, I also got my dataset for the Disney movies from Kieth Galli’s github and do not have information about how the films were chosen because it is not comprehensive of all Disney movies. I may be able to find a more accurate result by making the datasets the same size and including the Warner Bros films with larger box office earnings.</p>
+<p>We can see that the results of this t-test find a significant difference in the means, with a p-value in the ten-thousandths. It shows much higher average box office earnings for the Disney movies than the Warner Bros movies, however there are several factors that could be affecting this. Firstly, my dataset for Warner Bros movies is much larger, meaning that it probably includes many smaller films that may have been small outliers and dragged the means down. Furthermore, I also got my dataset for the Disney movies from Kieth Galli’s github and do not have information about how the films were chosen because it is not comprehensive of all Disney movies. One thing that could help find a more accurate result by making the datasets the same size and using the Warner Bros films that have the largest box office earnings.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -299,15 +299,15 @@ mean of x mean of y
 169826342 264047093 </code></pre>
 </div>
 </div>
-<p>Comparing the Disney movies to only the top Warner Bros movies just shows a larger gap, meaning that in reality, Disney movies have had much higher box office earnings and we can claim a statistical significance between the means.</p>
+<p>Comparing the Disney movies to only the top Warner Bros movies just shows a larger gap, meaning that in reality, Disney movies have had much higher box office earnings and we can reject the null hypothesis and claim a statistical significance between the means. Yay Disney!</p>
 <p>After seeing how successful these Disney movies were, we can see if there is any correlation between the amount spent on the movie and how well it did. To do this, I made a scatterplot looking at the relationship between budget and box office earnings.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>We can see a positive relationship, meaning that the movies with higher budgets tended to do better when they were released. The light pink and slightly larger point represents Ratatouille, so we can see that Ratatouille was very close to the regression line.</p>
-<p>Knowing this, I was curious to see what the profits of movies looked like. I made a new variable and subtracted the budgets from the box office earnings. I then put the 30 movies with the highest profits in a table.</p>
+<p>We can see a positive relationship, meaning that the movies with higher budgets tended to do better when they were released. The light pink and slightly larger point represents Ratatouille, so we can see that Ratatouille was very close to the regression line and was following the trend pretty closely.</p>
+<p>Knowing this, I was curious to see what the profits of movies looked like. I made a new variable that subtracted the budgets from the box office earnings to find the profit. I then put the 30 top movies by profit in a table.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
@@ -506,7 +506,8 @@ mean of x mean of y
 
 </div>
 </div>
-<p>In this table, Ratatouille takes 29th place as most profitable. Considering this is a dataset of 347 movies, that is very impressive and definitely noteworthy. After taking in all of this data, I think that you, dear reader, should have a seat, grab a snack, relax, and enjoy a wonderful screening of Ratatouille!</p>
+<p>In this table, Ratatouille takes 29th place as most profitable. Considering this is a dataset of 347 movies, that is quite impressive. It is also worth noting the $470.7 million profit – the masterminds behind Ratatouille must be living well.</p>
+<p>I hope you have enjoyed coming on this data journey with me, and I hope you learned something new(or many things) about Ratatouille. Since you have made it to the end, I think that you, dear reader, should have a seat, grab a snack, relax, and enjoy a wonderful screening of Ratatouille!</p>
 
 
 
