@@ -1,5 +1,5 @@
 ---
-title: "Mini Project 3"
+title: "Strings & Regular Expressions"
 sidebar: false
 editor_options: 
   chunk_output_type: console
@@ -45,7 +45,7 @@ ratatouille|>
 
 ### Ratatouille
 
-Did you know that in the Ratatouille movie, only 7,526 words were spoken? According to a Reddit [post](https://www.reddit.com/r/Screenwriting/comments/od3v7h/wordcounts_of_famous_screenplays/), the average screenplay has about 22,000 words(although Reddit is definitely not the most reliable source). Within those 7,526 words in Ratatouille, there were 2,193 distinct words spoken. This may seem like very few, but any Ratatouille lover knows how impactful those 2,193 different words were.
+Did you know that in the Ratatouille movie, only 7,526 words were spoken? According to a Reddit [post](https://www.reddit.com/r/Screenwriting/comments/od3v7h/wordcounts_of_famous_screenplays/), the average screenplay has about 22,000 words (although Reddit is definitely not the most reliable source so this may not be totally accurate). Within those 7,526 words in Ratatouille, there were 2,193 distinct words spoken. This may seem like very few, but any Ratatouille lover knows how impactful those 2,193 different words were.
 
 ```{r movie_sentiment_analysis, message=FALSE, echo=FALSE}
 sentiment_scores <- ratatouille |>
@@ -341,7 +341,7 @@ ggplot() +
   scale_fill_manual(values = c("Disney" = "deeppink", "Warner Bros" = "lightblue")) +
   labs(title = "Distribution of Box Office Earnings",
        x = "Box Office Earnings",
-       y = "Density", caption="data source: https://the-numbers.com/box-office-records/domestic/all-movies/theatrical-distributors/warner-bros/901") +
+       y = "Density", caption="data source: https://the-numbers.com/box-office-records/domestic/all-movies/theatrical-distributors/warner-bros") +
   theme_minimal()
 ```
 
