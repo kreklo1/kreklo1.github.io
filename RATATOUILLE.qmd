@@ -277,7 +277,7 @@ kable(table, format = "html") |>
 As we can see, none of these words that are considered to have negative connotations are actually being used in a negative sense. On the contrary, they are actually all part of very positive reviews about the movie.
 
 
-Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. Here, I decided to find the movies with the same director as Ratatouille to compare, so the following table shows the movies from this dataset that were directed by Brad Bird.
+Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. I know that for a lot of people, time is valuable, so which movies are conserving your time and which are taking more of it. For the first comparison, I looked at the lengths of the movies. 
 
 ```{r, include=FALSE}
 disney_movies <- read_csv("disney_movie_data_final.csv")
@@ -297,8 +297,6 @@ kable(same_director, format = "html")|>
   kable_styling()
 ```
 
-I found it interesting to see that all of the movies directed by Brad Bird in this dataset had music by Michael Giacchino. Looking further, Giacchino did the music for 11 of the movies in the dataset, including some great soundtracks including Cars 2 and Up.
-
 
 ```{r disney_movie_lengths, echo=FALSE, message=FALSE, warning=FALSE}
 disney_movies$`Running time` <- sub(" .*", "", disney_movies$`Running time`) 
@@ -309,10 +307,13 @@ disney_movies <- disney_movies[!is.na(disney_movies$`Running time`),]
 
 hist(disney_movies$`Running time`, freq = FALSE, col = "deeppink", main = "Distribution of Disney Movie Lengths", xlab="Running Time", ylab="Proportion of Movies")
 
+#mean(disney_movies$`Running time`)
+#sd(disney_movies$`Running time`)
 ```
+We can see that Ratatouille is just slightly over the average running time, with 111 minutes. The mean running time for the Disney movies in my dataset is 97.51009, with a standard deviation of 18.11338. This means the Ratatouille is within one standard deviation of the mean and is pretty average as far as movie length.
 
-
-```{r disney_movie_lengthss, echo=FALSE, message=FALSE, warning=FALSE}
+One part of Ratatouille that may be less average is its box office statistics. Ratatouille was, and continues to be, very popular so it did very well and has a very high box office score of 620.7 million dollars.
+```{r disney_box_office, echo=FALSE, message=FALSE, warning=FALSE}
 disney_movies$`Box office (float)` <- sub(" .*", "", disney_movies$`Box office (float)`) 
 disney_movies$`Box office (float)` <- as.numeric(disney_movies$`Box office (float)`) 
 disney_movies <- disney_movies[!is.na(disney_movies$`Box office (float)`),]
@@ -321,31 +322,67 @@ disney_movies <- disney_movies[!is.na(disney_movies$`Box office (float)`),]
 hist(disney_movies$`Box office (float)`, freq = TRUE, col = "deeppink", main = "Box Office Success for Disney Movies", xlab="Box Office", ylab="Number of Movies")
 abline(v = 620700000, col = "blue", lwd = 2)
 
+#mean(disney_movies$`Box office (float)`)
+#sd(disney_movies$`Box office (float)`)
 ```
+The average box office for the Disney movies is $169.8 million, however there is a $277.4 million standard deviation, so there is definitely a very wide range. Nonetheless, Ratatouille is still very high on the list and did very well for a Disney movie.
 
+I was also interested in looking into how the box office scores of Disney movies compared with those of a different company's movies. I found a dataset of Warner Bros. movies and their box scores, and performed a two-sample t-test to determine if there is a significant difference in the mean box office earnings of Disney movies and Warner Bros. movies.
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-observed_statistic <- disney_movies$`Box office (float)`[disney_movies$title == "Ratatouille"]
-num_iterations <- 1000
-simulated_statistics <- numeric(num_iterations)
+warner_bros_movies <- read_csv("Warner Bros Movies - Sheet1.csv")
 
-for (i in 1:num_iterations) {
-  random_box_office <- sample(disney_movies$`Box office (float)`)
-  new_test_stat <- random_box_office
-  simulated_statistics[i] <- new_test_stat
-}
+warner_bros_movies$`Worldwide\nBox Office` <- gsub("\\$", "", warner_bros_movies$`Worldwide\nBox Office`)
 
-p_value <- mean(simulated_statistics >= observed_statistic)
-print(p_value)
+warner_bros_movies$`Worldwide\nBox Office` <- gsub("\\,", "", warner_bros_movies$`Worldwide\nBox Office`)
 
-simulated_df <- data.frame(simulated_statistic = simulated_statistics)
+warner_bros_movies$`Worldwide\nBox Office` <- as.numeric(warner_bros_movies$`Worldwide\nBox Office`) 
+warner_bros_movies <- warner_bros_movies[!is.na(warner_bros_movies$`Worldwide\nBox Office`),]
 
-ggplot(simulated_df, aes(x = simulated_statistic)) +
-  geom_histogram(color = "pink2", fill = "lightpink", bins = 30) +
-  geom_vline(xintercept = observed_statistic, color = "hotpink", linewidth = 1) +
-  labs(title = "Ratatouille Observed Performance vs. Simulated Statistics of Disney Movies",
-       x = "Box Office Performance",
-       y = "Amount of Movies") +
+  
+t.test(disney_movies$`Box office (float)`, warner_bros_movies$`Worldwide\nBox Office`)
+```
+We can see that the results of this t-test find a significant difference in the means, with a p-value in the ten-thousandths. It shows much higher average box office earnings for the Disney movies, however there are several factors that could be affecting this. Firstly, my dataset for Warner Bros movies is much larger, meaning that it probably includes many smaller films that may have been small outliers and dragged the means down. Furthermore, I also got my dataset for the Disney movies from Kieth Galli's github and do not have information about how the films were chosen because it is not comprehensive of all Disney movies. I may be able to find a more accurate result by making the datasets the same size and including the Warner Bros films with larger box office earnings.
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+warner_bros_movies$`Worldwide\nBox Office` <- as.numeric(warner_bros_movies$`Worldwide\nBox Office`) 
+warner_bros_movies <- warner_bros_movies[!is.na(warner_bros_movies$`Worldwide\nBox Office`),]
+
+new_warner<-warner_bros_movies|>
+  slice_max(`Worldwide\nBox Office`, n=347)
+  
+t.test(disney_movies$`Box office (float)`,  new_warner$`Worldwide\nBox Office`)
+```
+Comparing the Disney movies to only the top Warner Bros movies just shows a larger gap, meaning that in reality, Disney movies have had much higher box office earnings and we can claim a statistical significance between the means.
+
+After seeing how successful these Disney movies were, we can see if there is any correlation between the amount spent on the movie and how well it did. To do this, I made a scatterplot looking at the relationship between budget and box office earnings.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+disney_movies$Budget <- as.numeric(sub(" .*", "", disney_movies$`Budget (float)`))
+
+disney_movies|>
+  ggplot(aes(x=`Budget (float)`, y=`Box office (float)`))+
+  geom_point(color="deeppink")+
+  geom_point(aes(x = 150000000, y = 620700000), color = "lightpink", size = 3)+
+  geom_smooth(se=FALSE, color="black")+
   theme_minimal()
+```
+We can see a positive relationship, meaning that the movies with higher budgets tended to do better when they were released. The light pink and slightly larger point represents Ratatouille, so we can see that Ratatouille was very close to the regression line.
+
+Knowing this, I was curious to see what the profits of movies looked like. I made a new variable and subtracted the budgets from the box office earnings. I then put the 30 movies with the highest profits in a table.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+big_disney<-disney_movies|>
+  mutate(profit=`Box office (float)`-`Budget (float)`,
+         `Box office (millions)`=round(`Box office (float)`/1000000, 1),
+         `Budget (millions)`=round(`Budget (float)`/1000000,1),
+         `Profit (millions)`=round(profit/1000000, 1))|>
+  filter(!is.na(profit))|>
+  select(c(title, `Box office (millions)`, `Budget (millions)`, `Profit (millions)`))|>
+  arrange(desc(`Profit (millions)`))|>
+  slice_max(`Profit (millions)`, n=30)
+
+kable(big_disney, format="html")|>
+  kable_styling()
 
 ```
 
+In this table, Ratatouille takes 29th place as most profitable. Considering this is a dataset of 347 movies, that is very impressive and definitely noteworthy. After taking in all of this data, I think that you, dear reader, should have a seat, grab a snack, relax, and enjoy a wonderful screening of Ratatouille!
