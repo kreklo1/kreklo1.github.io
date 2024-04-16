@@ -30,9 +30,7 @@ website:
 
 format:
   html:
-    theme:
-      light: flatly
-      dark: darkly
+    theme: lux
     css: styles.css
     toc: true
     code-overflow: wrap
