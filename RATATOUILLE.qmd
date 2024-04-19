@@ -22,6 +22,7 @@ library(viridis)
 library(rvest)
 library(plotly)
 library(gridExtra)
+library(ggiraph)
 ```
 
 ```{r, include=FALSE}
@@ -75,7 +76,6 @@ sentiment_rat|>
   theme(axis.text.x = element_blank())+
   guides(fill = guide_legend(reverse = TRUE))+
   scale_fill_manual(values = c("Positive" = "deeppink", "Negative" = "darkred"))
-
 ```
 
 The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity. This graph has the words in order of appearance, so the left is the beginning of the movie, and as the movie progresses, we move to the right. We can see areas where the movie was more positive, and also areas that were more negative.
@@ -230,7 +230,7 @@ other_neat <- other_format |>
 all_reviews<-neat_reviews |> full_join(other_neat)
 
 all_reviews<-all_reviews|>
-  mutate(id = 1:2637)
+  mutate(id = 1:nrow(all_reviews))
 
 ```
 

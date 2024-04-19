@@ -11,6 +11,8 @@ about:
       href: mailto:kreklo1@stolaf.edu
     - icon: github
       href: https://github.com/kreklo1
+    - icon: linkedin
+      href: www.linkedin.com/in/mary-kreklow
 ---
 
 ::: {#intro-heading}
