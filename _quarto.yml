@@ -12,8 +12,7 @@ website:
       - sidebar:maps
       - file: mini_project2.qmd
       - file: RATATOUILLE.qmd
-      - file: FinalProject.html
-        text: Final Project
+      - file: FinalProject.qmd
 
   sidebar:
     - id: maps
