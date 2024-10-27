@@ -8,6 +8,8 @@ website:
     left:
       - file: index.qmd
         text: Home
+      - file: FinalProject.qmd
+        text: MSCS 164 Final
       - sidebar:DS2
 
 
