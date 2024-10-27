@@ -8,11 +8,11 @@ website:
     left:
       - file: index.qmd
         text: Home
-      - sidebar: Data Science 2
+      - sidebar:DS2
 
 
   sidebar:
-    - id: Data Science 2
+    - id: DS2
       title: "Projects from MSCS 264"
       contents:
         - us_states.qmd
@@ -20,6 +20,7 @@ website:
         - rtip.qmd
         - mini_project2.qmd
         - RATATOUILLE.qmd
+
 
   page-footer:
     left: |
