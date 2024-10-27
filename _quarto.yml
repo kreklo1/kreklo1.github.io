@@ -8,7 +8,7 @@ website:
     left:
       - file: index.qmd
         text: Home
-      - sidebar:Data Science 2
+      - sidebar: Data Science 2
 
 
   sidebar:
