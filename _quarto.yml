@@ -8,18 +8,19 @@ website:
     left:
       - file: index.qmd
         text: Home
-      - file: rtip.qmd
-      - sidebar:maps
-      - file: mini_project2.qmd
-      - file: RATATOUILLE.qmd
-      - file: FinalProject.qmd
+      - sidebar:Data Science 2
+
 
   sidebar:
-    - id: maps
-      title: "Maps Project"
+    - id: Data Science 2
+      title: "Projects from MSCS 264"
       contents:
         - us_states.qmd
         - wi_gerrymandering.qmd
+        - rtip.qmd
+        - mini_project2.qmd
+        - RATATOUILLE.qmd
+        - FinalProject.qmd
  
   page-footer:
     left: |
