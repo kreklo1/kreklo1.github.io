@@ -20,8 +20,7 @@ website:
         - rtip.qmd
         - mini_project2.qmd
         - RATATOUILLE.qmd
-        - FinalProject.qmd
- 
+
   page-footer:
     left: |
       &copy; Mary Kreklow, 2024<br>

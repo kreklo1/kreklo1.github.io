@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -45,7 +45,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -54,14 +60,16 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 
 <link rel="stylesheet" href="styles.css">
@@ -71,9 +79,9 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Mary Kreklow</span>
     </a>
@@ -85,40 +93,15 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./rtip.html" rel="" target="">
- <span class="menu-text">R Tip of the Day</span></a>
-  </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-maps-project" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Maps Project</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-maps-project">    
-        <li>
-    <a class="dropdown-item" href="./us_states.html" rel="" target="">
- <span class="dropdown-text">US States</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./wi_gerrymandering.html" rel="" target="">
- <span class="dropdown-text">Wisconsin Gerrymandering</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="./mini_project2.html" rel="" target="">
- <span class="menu-text">Simulation</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="./RATATOUILLE.html" rel="" target="" aria-current="page">
- <span class="menu-text">Strings &amp; Regular Expressions</span></a>
-  </li>  
+  <li class="dropdown-header">
+ <span class="menu-text">sidebar:Data Science 2</span></li>
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -153,20 +136,27 @@ ul.task-list li input[type="checkbox"] {
   </div>
   
 
+
 </header>
+
 
 <section id="ratatouille" class="level3">
 <h3 class="anchored" data-anchor-id="ratatouille">Ratatouille</h3>
 <p>Did you know that in the Ratatouille movie, only 7,526 words were spoken? According to a Reddit <a href="https://www.reddit.com/r/Screenwriting/comments/od3v7h/wordcounts_of_famous_screenplays/">post</a>, the average screenplay has about 22,000 words (although Reddit is definitely not the most reliable source so this may not be totally accurate). Within those 7,526 words in Ratatouille, there were 2,193 distinct words spoken. This may seem like very few, but any Ratatouille lover knows how impactful those 2,193 different words were.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/movie_sentiment_analysis-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="RATATOUILLE_files/figure-html/movie_sentiment_analysis-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The above graph is a sentiment analysis of all of the words in Ratatouille. To find this, I used a sentiment library that ranks common words on a scale of -3 to 3, respectively negative to positive sentiment. I inner joined that dataset with my dataset of Ratatouille words to find their sentiments. We can see that a little over half of the Ratatouille words have positive connotations. This makes sense since it is overall a happy movie, although there is a lot of yelling from the head chef which would contribute to the good chunk of negativity. This graph has the words in order of appearance, so the left is the beginning of the movie, and as the movie progresses, we move to the right. We can see areas where the movie was more positive, and also areas that were more negative.</p>
 <p>Below we see a table with the 10 most used words in Ratatouille. To do this, I removed the stop words (common words that generally don’t hold significance like “the”) from the data and I ranked the leftover words by amount used. Unsurprisingly, we see that 3 of the words have to do with food, as it is a food movie. We also see that names/nicknames come up a lot, with Remy, Gusteau, Linguini and dad all making appearances. Rat is also fairly expected since the whole plot of the movie is about a rat. Somewhat surprising, however, is the word hey. I would think that it would be considered a stop word, however the set of stop words I used did not include it.</p>
 <div class="cell">
 <div class="cell-output-display">
+<div>
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <tbody>
 <tr class="odd">
@@ -201,27 +191,41 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </div>
+</div>
 <p>While seeing these words is nice to get a taste for what the most used words are, it is also nice to have a more visual representation. Below is a word cloud containing the top 100 used words from the move. The bigger the word, the more it was used. By using a diagram like this, we can more easily see which words are the most commonly found, and the color codings show up what other words were used a similar amount of times.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/wordcloud-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="RATATOUILLE_files/figure-html/wordcloud-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Now that we know which words were used the most in Ratatouille, we can look into where in the movie these words show up. For the next graph, I looked into the top 5 words and where they are positioned in comparison to all other words in the movie. We can see that “dad” was used mostly in 3 separate areas of the movie, whereas “chef” was used pretty regularly throughout.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/word_occurrences-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="RATATOUILLE_files/figure-html/word_occurrences-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Anyone who has watched Ratatouille surely understands that it is a masterpiece, but what do people really think about the film? To find this out, we can look to the master site of movie reviews, Rotten Tomatoes. On Rotten Tomatoes, Ratatouille scores a 96% on the Tomatometer (critic reviews) and an 87% for audience ratings. It is clear that the critics are the true experts in what makes a good movie! The graph below shows a sentiment analysis of words from all reviews (critic and audience).</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/sentiment_review-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="RATATOUILLE_files/figure-html/sentiment_review-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We say that Ratatouille has, by far, had a positive impact on watchers. However, it leaves one to wonder what some of the negative reviews had to say about the movie. The negatively connotated words in these reviews are “cry”, “bored”, “hard”, “struggling”, “critic”, and “leave”. Many of these words are not inherently negative, and would depend on the context.</p>
 <div class="cell">
 <div class="cell-output-display">
+<div>
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
@@ -232,19 +236,19 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">cry</td>
-<td style="text-align: left;">Beautiful story and amazing animation. Ratatouille will make you laugh and &lt;cry&gt; in this family animation of a rat trying to make it big as a chef in Paris.</td>
+<td style="text-align: left;">no matter how many times you watch it, you won't get &lt;bored&gt;</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">bored</td>
-<td style="text-align: left;">Definitely my favorite pinar film, have watched this time and time again never getting &lt;bored&gt;</td>
+<td style="text-align: left;">like the snooty restaurant &lt;critic&gt; anton ego (voiced by peter o'toole), we enter ratatouille thinking we've tasted it all, and we leave hoping for seconds.</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hard</td>
-<td style="text-align: left;">You know, it's &lt;hard&gt; to pick a favourite from Pixar's library of films, but Ratatouille is right up there. Brad Bird helms another another one of their memorable features. It combines all the things we love (or loved) about the studio. The creative concept, the simple, but heartwarming story, the well-defined and developed characters, the vibrant, expressive animation which still holds up today, and the universal themes which appeal to all ages. Michael Giacchino's score also complements the the movie perfectly. It's &lt;hard&gt; to think of anything I didn't like.</td>
+<td style="text-align: left;">like the snooty restaurant critic anton ego (voiced by peter o'toole), we enter ratatouille thinking we've tasted it all, and we &lt;leave&gt; hoping for seconds.</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">struggling</td>
-<td style="text-align: left;">The idea of ​​combining mice with French food is very good. It not only presents tempting food, but more importantly, highlights the values ​​​​of the cuisine. This is actually a story about a small person &lt;struggling&gt; for his dream. Such stories are always very touching.</td>
+<td style="text-align: left;">no matter how many times you watch it, you won't get &lt;bored&gt;</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">critic</td>
@@ -260,25 +264,38 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </div>
+</div>
 <p>As we can see, none of these words that are considered to have negative connotations are actually being used in a negative sense. On the contrary, they are actually all part of very positive reviews about the movie.</p>
 <p>Now that we know quite a bit about the contents of Ratatouille, we can look at how some of its statistics compared to other Disney Movies. I know that for a lot of people, time is valuable, so I wanted to see which movies are conserving your time and which are taking more of it. For the first comparison, I found a <a href="https://github.com/KeithGalli/disney-data-science-tasks/blob/master/dataset/disney_movie_data_final.csv">dataset</a> of many Disney movies and looked at the lengths of the movies.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/disney_movie_lengths-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="RATATOUILLE_files/figure-html/disney_movie_lengths-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We can see that Ratatouille is just slightly over the average running time, with 111 minutes. The mean running time for the Disney movies in my dataset is 97.51009, with a standard deviation of 18.11338. This means the Ratatouille is within one standard deviation of the mean and is pretty average as far as movie length.</p>
 <p>One part of Ratatouille that may be less average is its box office statistics. Ratatouille was, and continues to be, very popular, so unsurprisingly it did very well and has a very high box office score of 620.7 million dollars.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/disney_box_office-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="RATATOUILLE_files/figure-html/disney_box_office-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The average box office for the Disney movies is $169.8 million, however there is a $277.4 million standard deviation, so there is definitely a very wide range. Nonetheless, Ratatouille is still very high on the list and did very well for a Disney movie.</p>
 <p>I was also interested in looking into how the box office scores of Disney movies compared with those of a different company’s movies. I found a <a href="https://the-numbers.com/box-office-records/domestic/all-movies/theatrical-distributors/warner-bros/901">dataset</a> of Warner Bros.&nbsp;movies and their box scores to look into the difference between their means.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We can see that Warner Bros has more lower revenue movies, while Disney seems to have more higher revenue films. Because we cannot make definite conclusions from this graph, I performed a two-sample t-test to determine if there is a significant difference in the mean box office earnings of Disney movies and Warner Bros.&nbsp;movies.</p>
@@ -317,13 +334,18 @@ mean of x mean of y
 <p>After seeing how successful these Disney movies were, we can see if there is any correlation between the amount spent on the movie and how well it did. To do this, I made a scatterplot looking at the relationship between budget and box office earnings.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="RATATOUILLE_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We can see a positive relationship, meaning that the movies with higher budgets tended to do better when they were released. The light pink and slightly larger point represents Ratatouille, so we can see that Ratatouille was very close to the regression line and was following the trend pretty closely.</p>
 <p>Knowing this, I was curious to see what the profits of movies looked like. I made a new variable that subtracted the budgets from the box office earnings to find the profit. I then put the 30 top movies by profit in a table.</p>
 <div class="cell">
 <div class="cell-output-display">
+<div>
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
@@ -520,6 +542,7 @@ mean of x mean of y
 
 </div>
 </div>
+</div>
 <p>In this table, Ratatouille takes 29th place as most profitable. Considering this is a dataset of 347 movies, that is quite impressive. It is also worth noting the $470.7 million profit – the masterminds behind Ratatouille must be living well.</p>
 <p>I hope you have enjoyed coming on this data journey with me, and I hope you learned something new (or many new things) about Ratatouille. Now that you have made it to the end, I think that you, dear reader, should have a seat, grab a snack, relax, and enjoy a wonderful screening of Ratatouille!</p>
 
@@ -606,10 +629,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -619,8 +659,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -632,7 +681,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -676,6 +848,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -701,6 +874,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -763,13 +962,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">© Mary Kreklow, 2024<br> All content licensed under <i class="bi-badge-cc"></i> <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">(CC BY-NC-SA 4.0)</a></div>   
+    <div class="nav-footer-left">
+<p>© Mary Kreklow, 2024<br> All content licensed under <i class="bi-badge-cc"></i> <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">(CC BY-NC-SA 4.0)</a></p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
-    <div class="nav-footer-right">Site built with <a href="https://quarto.org/">Quarto</a></div>
+    <div class="nav-footer-right">
+<p>Site built with <a href="https://quarto.org/">Quarto</a></p>
+</div>
   </div>
 </footer>
+
 
 
 
