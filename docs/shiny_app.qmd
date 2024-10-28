@@ -1,0 +1,9 @@
+---
+title: "Interactive Shiny App"
+description: "Explore our interactive Shiny app here!"
+format: html
+---
+
+# Interactive Shiny App
+
+\`\`\`{iframe, src="[https://kreklo1.shinyapps.io/liesl_mary_final",](https://kreklo1.shinyapps.io/liesl_mary_final",) height=600, width="100%"}

@@ -22,6 +22,7 @@ website:
         - rtip.qmd
         - mini_project2.qmd
         - RATATOUILLE.qmd
+        - shiny_app.qmd
 
 
   page-footer:
