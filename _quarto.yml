@@ -9,13 +9,15 @@ website:
       - file: index.qmd
         text: Home
       - file: FinalProject.qmd
-        text: MSCS 164 Final
+        text: MSCS 164
       - sidebar:DS2
+      - file: SDS272.qmd
+        text: SDS 272
 
 
   sidebar:
     - id: DS2
-      title: "Projects from MSCS 264"
+      title: "MSCS 264"
       contents:
         - us_states.qmd
         - wi_gerrymandering.qmd
