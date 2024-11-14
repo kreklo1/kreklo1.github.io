@@ -3,5 +3,10 @@ title: "Liesl & Mary EDA"
 format: html
 ---
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/P9ygcsKZ9ag?si=SZ19rz_NUCPLH1DK" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/P9ygcsKZ9ag?si=SZ19rz_NUCPLH1DK" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 
+</iframe>
+
+## Storyboard
+
+![](images/cdv_photo_1731509820_20241113085777.jpg)
