@@ -10,3 +10,7 @@ format: html
 ## Storyboard
 
 ![](images/cdv_photo_1731509820_20241113085777.jpg)
+
+## Introductory Graphs
+
+![](images/liesl_mary_project.pdf){fig-align="center"}
