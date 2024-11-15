@@ -18,41 +18,11 @@ about:
 ::: {#intro-heading}
 ## Mary Kreklow
 
-Quantitative Economics Student <br> [St. Olaf College](https://wp.stolaf.edu/)
+*Welcome!*
 
-### Education
+I'm Mary Kreklow, a junior at St. Olaf College, studying quantitative economics with concentrations in statistics & data science and international relations. My academic journey is driven by a commitment to understanding complex systems—whether that’s through data analysis, policy evaluation, or modeling solutions for real-world issues. Outside the classroom, I lead as a SOAR Peer Leader and Senior Admissions Fellow, and I’m actively involved in music ensembles and campus organizations. With a passion for helping others and finding good in the world, I’m excited to work on projects that reflect my dedication to bridging gaps and uplifting communities.
 
-Bachelor of Arts (B.A.) in Quantitative Economics\
-Concentrations in Statistics & Data Science, International Relations\
-Expected Graduation 2026 \| St. Olaf College
-
-High School Diploma 2022 \| Tigerton High School
-
-### Work Experience
-
-SOAR Peer Leader \| Academic Success Center \| April 2023-present
-
-Admissions Fellow \| St. Olaf Admissions \| October 2022-present - Lead Fellow \| September 2023-present
-
-Cabin Leader \| Crossways Camping Ministry \| May 2022-Aug 2023 - Health Coordinator \| May 2024-August 2024
-
-Hall Receptionist \| St. Olaf Residence Life \| September 2022-May 2023
-
-Crew Member \| Killian Management McDonald’s \| June 2020-August 2022
-
-### Co-Curricular Experience
-
-Chapel Choir: Alto 1
-
-Chapel Ringers
-
-Community Council Chair - Thorson Hall
-
-TRIO - Peer Mentor
-
-Student Congregation Council: VP of Life & Growth
-
-St. Olaf Leftists
+Here, you’ll find a collection of projects that showcase my curiosity and creativity, offering a playful take on data-driven insights.
 :::
 
 ### Get in Touch
