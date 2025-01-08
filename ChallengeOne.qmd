@@ -1,0 +1,394 @@
+---
+title: "Final Project - Group B_1_2"
+author: "Meghan, Maya, and Mary"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
+```
+
+```{r, echo=FALSE}
+library(readr)
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(tidyr)
+library(knitr)
+library(mosaic)
+library(Stat2Data)
+library(ggResidpanel)
+library(vip)
+library(GGally)
+library(MASS)
+library(gridExtra)
+library(yardstick)
+library(dials)
+library(parsnip)
+library(tune)
+library(recipes)
+library(workflows)
+library(rsample)
+library(car)
+library(tidyverse)
+library(tidymodels)
+library(dslabs)
+library(rpart.plot)
+tidymodels_prefer()
+hotel <- read_csv("hotels.csv")
+```
+
+**Background Data**
+
+The hotel dataset was created using data from the hotels’ Property Management System in Portugal. It contains detailed information about hotel reservations, including cancellations, booking dates, the time between booking and arrival, special requests, and more. While this dataset offers numerous opportunities for modeling, our focus is on identifying factors associated with cancellations and predicting when guests are likely to cancel their bookings.
+
+**Cleaning Steps**
+
+We performed several data cleaning steps to improve our models and analysis. For example, we combined the "babies" and "children" columns into a single "children" column and created a "RoomChange" dummy variable to indicate where the requested room differed from the assigned room. We removed variables such as MarketSegment, ArrivalDateYear, ArrivalDateMonth, and ArrivalDateDayOfMonth because their information could be derived from other columns. Similarly, we excluded Country, Agent, and Company due to the large number of specific levels that would not contribute meaningfully to the models. Lastly, we removed columns that contained a lot of missing values. 
+
+
+```{r, echo=FALSE}
+hotel<-hotel|>
+  mutate(
+    Children = Children + Babies,
+    RoomChange = if_else(ReservedRoomType != AssignedRoomType, 1, 0))
+#Makes children variable from children and babies and roomchange variable for when the reserved room type does not match the assigned room type
+
+hotels<-hotel |>
+  dplyr::select(-Babies, -MarketSegment, -Country, -Agent, -Company, -ReservedRoomType, -AssignedRoomType, -ArrivalDateMonth, -ArrivalDateYear, -ArrivalDateDayOfMonth, -ReservationStatusDate)|>
+  filter(DistributionChannel!="Undefined")
+#Takes out variables we don't want
+```
+**Question:** Can we predict whether a reservation will be cancelled based on booking and guest characteristics?
+
+```{r}
+
+hotel_table <- hotels |>
+  summarise(across(everything(), ~class(.))) |>
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Type") |>
+  mutate(
+    `Response/Explanatory` = if_else(Variable == "IsCanceled", "Response", "Explanatory"),
+    `Number of Levels` = case_when(
+      Type == "character" ~ as.character(sapply(Variable, function(var) n_distinct(hotels[[var]]))),
+      TRUE ~ NA_character_))
+
+kable(hotel_table)
+
+```
+
+To answer our question, we are using a variable called IsCancelled that is a dummy variable with a value of 0 for not-cancelled bookings and 1 for cancelled bookings. This is our response, and all other variables will be used as explanatory variables.
+
+```{r, echo=FALSE}
+library(skimr)
+skim_without_hist <- skim_with(numeric = sfl(hist = NULL))
+skimcat<-hotels|>
+  dplyr::select(Meal, DistributionChannel, DepositType, CustomerType, ReservationStatus)
+         
+
+cattbl <- skim_without_hist(skimcat) |>
+  dplyr::select(-character.empty, -character.whitespace, -skim_type, -n_missing, -complete_rate) |>
+  rename(
+    Variable = skim_variable,
+    Min = character.min,
+    Max = character.max,
+    `Unique Values` = character.n_unique
+  )
+
+kable(cattbl)
+
+
+
+skimnum<-hotels|>
+  dplyr::select(IsCanceled, LeadTime, ArrivalDateWeekNumber, StaysInWeekendNights, StaysInWeekNights, Adults, Children, IsRepeatedGuest, PreviousCancellations, PreviousBookingsNotCanceled, BookingChanges, DaysInWaitingList, ADR, RequiredCarParkingSpaces, TotalOfSpecialRequests, RoomChange)
+         
+
+numtbl <- skim_without_hist(skimnum) |>
+  dplyr::select(-numeric.p25, -numeric.p50, -numeric.p75, -skim_type, -n_missing, -complete_rate)|>
+  mutate(across(where(is.numeric), ~ round(., digits = 2))) |>
+  rename(
+    Variable = skim_variable,
+    Mean = numeric.mean,
+    SD = numeric.sd,
+    Min = numeric.p0,
+    Max = numeric.p100
+  )  
+  
+ 
+  
+kable(numtbl)
+
+```
+
+```{r, out.width="50%", out.height="50%", fig.align = "center", fig.cap="This graph shows the number of cancelled reservations in our dataset versus the number of non-cancelled reservations.  It is included to show the skew of observations in the dataset we used which informs our decision later on to optimize area under the ROC curve instead of accuracy."}
+hotels|>
+  ggplot(aes(x=IsCanceled))+
+  geom_bar()+
+  labs(title="Distribution of Canceled vs. Not Canceled Reservations", x = "Cancellation Status (0=Not Cancelled, 1=Cancelled)", y = "Count")
+```
+
+
+```{r, out.width="50%", out.height="50%", fig.align = "center", fig.cap="We are looking at if lead time (time between booking and check-in) makes a difference to potentially inform our employers if they should set limits to when they open booking. As we can see, there is a wide range of values, and our histogram is extremely right skewed. Most lead times are relatively short, with bookings made closer to the reservation date. However, there are a few notable outliers where reservations were made more than a year in advance."}
+
+ggplot(hotels, aes(x=LeadTime))+
+  geom_histogram()+
+  labs(title = "Distribution of Time between Booking Date and Check-in", x="Time between Booking and Reservation Date (days)", y="Frequency")
+```
+
+
+```{r, out.width="50%", fig.align = "center", out.height="50%", fig.cap="This graph shows how previous cancellations and lead time are correlated with cancellation status. We can see that when the number of previous cancellations is 0, the majority of reservations are not cancelled. However, for higher values of previous cancellations, cancellations become much more common. There does not seem to be strong correlations between cancellation status and lead time, however we do see that all the bookings made more than 500 days in advance were not cancelled"}
+
+ggplot(hotels, aes(x = LeadTime, y = PreviousCancellations, color = factor(IsCanceled)))+
+  geom_jitter(alpha = .5)+
+  labs(title = "Lead Time vs. Previous Cancellations", x = "Lead Time", y = "Previous Cancellations", color = "Cancellation Status")
+```
+
+
+```{r, out.width="50%", out.height="50%", fig.cap="These boxplots show us that the average lead time for cancelled reservations is higher than that for not-cancelled reservations. This could have to do with the large influx of reservations with little to no lead time that we saw in the histogram, so if the hotel allows same-day booking those bookings would almost definitely not be cancelled. This graph is interesting and relevant because bookings that occur last minute or close to their time are cancelled less than those further in advance.", fig.align = "center"}
+ggplot(hotels, aes(x = factor(IsCanceled), y = LeadTime)) +
+  geom_boxplot()+
+  labs(title="Lead time by Cancellation Status" ,x = "Cancellation Status", y = "Days between Booking and Arrival")
+```
+
+
+```{r, out.width="50%", out.height="50%", fig.cap="We can also look into the booking channel. We see that the most cancellations are coming from travel agents/tour operators. This makes sense because they often book in large quantities and might also make provisional bookings for clients who are not yet committed. Furthermore, people are working through a third party which might be easier to cancel than directly through the hotel.", fig.align = "center"}
+
+ggplot(hotels, aes(x = DistributionChannel, fill = factor(IsCanceled))) +
+  geom_bar(position="dodge")+
+  labs(title="Cancellations by Booking Distribution Channel", x = "Distribution Channel", y = "Count", fill = "Cancellation Status")
+hotel_sample<-sample_n(hotels, 10000)
+```
+
+
+
+```{r, include=FALSE, echo=FALSE, fig.cap="This graph shows the distribution of time stays versus cancellations. The graph is not super informative because they are similar."}
+ggplot(hotels, aes(x = StaysInWeekNights, y = StaysInWeekendNights, color = as.factor(IsCanceled))) +
+  geom_point()+
+  labs(title="Week Night Stays vs. Weekend Stays")
+hotels|>
+  ggplot(aes(x=ArrivalDateWeekNumber, fill = factor(IsCanceled)))+
+  geom_histogram()+
+  labs(title = "Weekly Distribution of Hotel Bookings")
+```
+
+------------------------------------------------------------------------
+
+## Lasso Model
+
+We decided to use a lasso model and optimize the penalty to find the best predictors of booking cancellations. We made our training and testing datasets and set up a lasso model with the penalty tuned. We then used cross-validation to find the optimal lambda and added that into our workflow and fit. Our original model contained a variable (reservation status), that had an already known relationship with our response because it said whether the reservations were cancelled or not, so we excluded it from our recipe to fit a better model. We chose to optimize with the roc_auc metric, and used 10 fold cross validation. Because of the extremely skewed nature of our dataset, we chose to find the penalty where specificity and sensitivity were closest to equal. If the hotel predicts too many cancellations that don’t actually happen (false positives), they might double book rooms to compensate. This could lead to the hotel being overfilled and not having enough rooms for all guests. On the other hand, if the hotel fails to predict cancellations (false negatives), they could end up with empty rooms that go unused, losing money as a result. Finding where these are closest to equal can balance those out, helping the hotel combat any issues. We used step_smote in our recipe, which handles class imbalance by generating new examples of the minority class through nearest neighbors. This helped the model equally consider non-cancellations and cancellations, and resulted in a 73.2% model accuracy.
+
+```{r, out.width="50%", out.height="50%"}
+library(themis)
+
+hotels <- hotels |>
+  mutate(IsCanceled = as.factor(IsCanceled)) |>
+  dplyr::select(-ReservationStatus)
+
+set.seed(123)
+hotel_split <- initial_split(hotels, prop = 0.8)
+hotel_train <- training(hotel_split)
+hotel_test <- testing(hotel_split)
+
+lasso_spec <- logistic_reg(penalty = tune(), mixture = 1) |> 
+  set_mode("classification") |> 
+  set_engine("glmnet")
+
+hotel_recipe <- recipe(IsCanceled ~ ., data = hotel_train) |>
+  step_dummy(all_nominal(), -all_outcomes()) |>
+  step_zv() |>
+  step_normalize(all_predictors()) |>
+  step_smote(IsCanceled, skip=TRUE)
+
+hotel_wkflow <- workflow() |>
+  add_recipe(hotel_recipe) |>
+  add_model(lasso_spec)
+
+set.seed(123)
+cv_folds <- vfold_cv(hotel_train, v = 10)
+lasso_grid <- grid_regular(penalty(range = c(-4, -3.3)), levels = 200)
+
+lasso_results <- tune_grid(
+  hotel_wkflow,
+  resamples = cv_folds,
+  grid = lasso_grid,
+  metrics = metric_set(roc_auc, sens, spec)
+)
+
+metrics <- collect_metrics(lasso_results)
+
+sensitivity <- metrics |> filter(.metric == "sens")|>
+  dplyr::select(penalty, sens=mean)
+specificity <- metrics |> filter(.metric == "spec") |> 
+  dplyr::select(penalty, spec = mean)
+
+combined_metrics <- sensitivity |>
+  inner_join(specificity, by = "penalty") |>
+  mutate(abs_diff = abs(sens - spec))
+
+optimal_penalty <- combined_metrics |>
+  arrange(abs_diff) |>
+  slice(1) |>
+  pull(penalty)
+
+hotel_final_wf <- finalize_workflow(hotel_wkflow, list(penalty = optimal_penalty))
+hotel_final_fit <- fit(hotel_final_wf, data = hotel_train)
+
+conf_matrix <- augment(hotel_final_fit, new_data = hotel_test) |>
+  conf_mat(truth = IsCanceled, estimate = .pred_class)
+
+
+acc <- augment(hotel_final_fit, new_data = hotel_test) |>
+  accuracy(truth = IsCanceled, estimate = .pred_class)
+
+kable(acc)
+
+importance <- extract_fit_parsnip(hotel_final_fit) |> 
+  vip(num_features = 5L)
+
+roc_tbl <- augment(hotel_final_fit, new_data = hotel_test) |>
+  roc_curve(truth = IsCanceled, .pred_1, event_level = "second")
+
+rocc<-autoplot(roc_tbl)
+```
+
+```{r, out.width="50%", out.height="50%", fig.cap="The confusion matrix seen here shows the extra emphasis on the cancelled model to help combat the unbalanced data. True cancellations are predicted correctly about 81.4% of the time, and true non cancellations are predicted correctly about 70% of the time."}
+autoplot(conf_matrix, type = "heatmap")
+
+```
+
+```{r, out.width="50%", out.height="50%", fig.cap="The five most important variables in this model are seen above. Previous cancellations, transient customer type and non-refundable deposits have a positive relationship with cancellation status, and required car parking spaces and room change have a negative relationship with cancellations."}
+
+grid.arrange(importance, rocc, nrow=1)
+```
+
+
+## Tree Model
+
+For this model, we built a tree and optimized it using bootstrapping, resulting in a final tree with a depth of 15. We used the same recipe as before to ensure that the skewed dataset was being accounted for. This yields about an 78.6% accuracy rate, which is quite a bit better than our lasso model. We chose to optimize using roc_auc because of the imbalanced nature of our dataset, as this metric takes into account both false positives and false negatives. 
+
+```{r, out.height="50%", out.width="50%"}
+hotel_model <- decision_tree(
+  cost_complexity = tune(),
+  tree_depth = tune()
+) |> 
+  set_mode("classification") |> 
+  set_engine("rpart")
+
+hotel_workflow <- workflow() |> 
+  add_recipe(hotel_recipe) |> 
+  add_model(hotel_model)
+
+set.seed(12345)
+tree_boots <- bootstraps(hotel_train, times = 5)
+
+hotel_grid <- grid_regular(
+  cost_complexity(), 
+  tree_depth(), 
+  levels = 5
+)
+
+hotel_results <- tune_grid(
+  hotel_workflow,
+  resamples = tree_boots,
+  grid = hotel_grid
+)
+
+best_params <- select_by_one_std_err(
+  hotel_results,
+  metric = "roc_auc",
+  desc(cost_complexity))
+
+final_workflow <- hotel_workflow |> 
+  finalize_workflow(best_params)
+
+final_model_hotel <- fit(final_workflow, hotel_train)
+
+
+hotel_predictions <- augment(final_model_hotel, hotel_test)
+
+accccc<-hotel_predictions |> 
+  accuracy(truth = IsCanceled, estimate = .pred_class)
+
+kable(accccc)
+
+important<-extract_fit_parsnip(final_model_hotel) |> 
+  vip(num_features=5L)
+
+roc_tbl <- augment(final_model_hotel, hotel_test) |> 
+  roc_curve(IsCanceled, .pred_0, event_level = "first")
+roc_tbl<-autoplot(roc_tbl)
+
+```
+
+```{r, out.width="50%", out.height="50%", fig.cap="This model predicts true cancellations about 80.5% correctly and non cancellations about 77.8% correctly."}
+hotel_predictions |> 
+  conf_mat(truth = IsCanceled, estimate = .pred_class)|>
+  autoplot(type="heatmap")
+  
+```
+
+
+```{r, out.width="50%", out.height="50%", fig.cap="This model has 3 of the same 5 most important variables, room change, required car parking spaces, and customer type, meaning that these most likely have a somewhat strong relationship with cancellations. The other 2 important variables found from the tree model that were not identified as important in the lasso model are lead time and transient-party customer type. Lead time has a positive relationship with cancellations, while transient-party customers have a negative relationship with cancellations."}
+
+grid.arrange(important, roc_tbl, nrow=1)
+
+```
+
+
+## Forests
+
+Our last model was a random forest, which uses multiple decision trees to optimize accuracy and prevent overfitting. 
+
+```{r}
+library(ranger)
+
+ranger_spec <- 
+  rand_forest(trees = 100, mtry=26) |> 
+  set_mode("classification") |> 
+  set_engine("ranger",importance = "impurity")  
+
+ranger_workflow <- 
+  workflow() |> 
+  add_recipe(hotel_recipe) |> 
+  add_model(ranger_spec) 
+
+hotel_forest_model <- fit(ranger_workflow, hotel_train)
+
+acccc<-augment(hotel_forest_model, hotel_test) |>
+  accuracy(truth=IsCanceled, estimate= .pred_class)
+kable(acccc)
+```
+
+
+```{r, out.width="50%", out.height="50%", fig.cap="Using a random forest, we found a higher accuracy than our other models. The confusion matrix shows improved findings for preventing both type I and II errors. It predicts true cancellations correctly about 75.5% of the time and true non cancellations correctly about 88.4% of the time."}
+
+augment(hotel_forest_model, hotel_test) |>
+  conf_mat(truth=IsCanceled, estimate= .pred_class)|>
+  autoplot(type="heatmap")
+
+importante<-vip(hotel_forest_model, num_features=5L)
+
+roc_tbl <- augment(hotel_forest_model, new_data = hotel_test) |>
+  roc_curve(truth = IsCanceled, .pred_1, event_level = "second")
+
+rocc<-autoplot(roc_tbl)
+```
+
+
+```{r, out.height="50%", out.width="50%", fig.cap="Three of the top-five important variables seen in the other models, lead time, car parking spaces, and room change, were also here, and this model also includes ADR (average daily revenue of the hotel) and arrival date week (what time of year). ADR has a positive relationship with cancellations, and arrival date week has increased cancellations during the summer/early fall as opposed to other times of the year"}
+grid.arrange(importante, rocc, nrow=1)
+```
+
+
+
+## Conclusion
+
+In conclusion, we found that we can predict with about 86% accuracy whether or not someone will cancel their hotel reservation based on customer characteristics and booking history. Figures summarizing the fit of each of the models and their variable importance are provided and described appropriately above. Some limitations to our finding are that all of our data is from Portugal, meaning that these trends may not be prevalent to other hotels around the world and our scope is limited. Many of our variables are also not normally distributed and are highly skewed, which can affect our models. We did try to combat this, but it is still important to keep in mind.
+
+We hope that this modeling could be useful to hotels. Although it is currently limited to select hotels in Portugal, further research could help expand the scope. Ideally, these models could be very helpful for hotels around the world in predicting cancellations based on consumer and reservation characteristics.
+
+

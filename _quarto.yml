@@ -13,6 +13,8 @@ website:
       - sidebar:DS2
       - file: SDS272.qmd
         text: SDS 272
+      - file: ChallengeOne.qmd
+        text: SDS 341
 
 
   sidebar:
